@@ -17,6 +17,45 @@ const CATEGORY_LABELS: Record<PairCategory, string> = {
   "Metals": "Metals",
 };
 
+const CATEGORY_INSTRUCTIONS: Record<PairCategory, { title: string; rules: string[] }> = {
+  "Standard Forex Pairs": {
+    title: "Standard Forex — Trading Rules",
+    rules: [
+      "Placeholder: Only trade during London or New York session overlap.",
+      "Placeholder: Minimum 1:2 risk-to-reward ratio required.",
+      "Placeholder: Avoid entries within 30 min of major news events.",
+      "Placeholder: Max 2 concurrent trades on standard pairs.",
+    ],
+  },
+  "JPY Pairs": {
+    title: "JPY Pairs — Trading Rules",
+    rules: [
+      "Placeholder: Account for JPY pip value difference (÷100 vs ÷10000).",
+      "Placeholder: Monitor BOJ rate decisions and Tokyo session opens.",
+      "Placeholder: Wider spreads expected during low-liquidity periods.",
+      "Placeholder: Placeholder rule #4 for JPY pairs — replace me.",
+    ],
+  },
+  "Cross Pairs": {
+    title: "Cross Pairs — Trading Rules",
+    rules: [
+      "Placeholder: Check correlation with major pairs before entering.",
+      "Placeholder: Cross pairs typically have lower liquidity — widen SL.",
+      "Placeholder: Avoid trading when both base currencies have news.",
+      "Placeholder: Placeholder rule #4 for Cross pairs — replace me.",
+    ],
+  },
+  "Metals": {
+    title: "Metals — Trading Rules",
+    rules: [
+      "Placeholder: XAU/USD lot sizes differ — verify contract size.",
+      "Placeholder: Metals act as safe-haven; monitor DXY correlation.",
+      "Placeholder: Avoid trading metals during thin holiday sessions.",
+      "Placeholder: Placeholder rule #4 for Metals — replace me.",
+    ],
+  },
+};
+
 // Icons
 const SunIcon = () => (
   <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,6 +101,7 @@ const BackIcon = () => (
 );
 
 export default function RiskAnalyzer() {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -228,9 +268,22 @@ export default function RiskAnalyzer() {
               >
                 <BarIcon /> Analyze Trade
               </button>
+
+            </div>
+
+            {/* Category Instructions */}
+            <div className="instructions-box lg:col-span-2 ">
+              <p className="instructions-heading">{CATEGORY_INSTRUCTIONS[category].title}</p>
+              <ul className="instructions-list">
+                {CATEGORY_INSTRUCTIONS[category].rules.map((rule, i) => (
+                  <li key={i}>{rule}</li>
+                ))}
+              </ul>
             </div>
           </div>
+
         ) : (
+          
           /* Results */
           <div className="grid-layout">
             {/* Left — chart */}
@@ -279,6 +332,50 @@ export default function RiskAnalyzer() {
           </div>
         )}
       </main>
+
+      {/* Mini Video Player */}
+      <div 
+        className="fixed bottom-6 left-6 w-48 aspect-video bg-black rounded-lg shadow-lg overflow-hidden cursor-pointer group border border-[var(--border)] z-40 transition-transform hover:scale-105"
+        onClick={() => setIsVideoModalOpen(true)}
+      >
+        <video 
+          src="https://www.w3schools.com/html/mov_bbb.mp4" 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity pointer-events-none"
+        />
+        <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-colors">
+          <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow-md text-black">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Video Modal */}
+      {isVideoModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl border border-white/10">
+            <button 
+              onClick={() => setIsVideoModalOpen(false)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+            >
+              <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <video 
+              src="https://www.w3schools.com/html/mov_bbb.mp4" 
+              controls 
+              autoPlay 
+              className="w-full h-auto max-h-[80vh] outline-none"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

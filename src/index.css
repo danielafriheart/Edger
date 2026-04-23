@@ -3,6 +3,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
+/* *{
+    outline: 1px solid red;
+} */
+
 :root {
     --bg: #f9f9f9;
     --surface: #ffffff;
