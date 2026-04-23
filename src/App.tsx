@@ -152,7 +152,7 @@ export default function RiskAnalyzer() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen">
       {/* Header */}
       <header className="app-header">
         <div className="logo">
@@ -272,7 +272,7 @@ export default function RiskAnalyzer() {
             </div>
 
             {/* Category Instructions */}
-            <div className="instructions-box lg:col-span-2 ">
+            <div className="instructions-box lg:col-span-2">
               <p className="instructions-heading">{CATEGORY_INSTRUCTIONS[category].title}</p>
               <ul className="instructions-list">
                 {CATEGORY_INSTRUCTIONS[category].rules.map((rule, i) => (
@@ -283,7 +283,7 @@ export default function RiskAnalyzer() {
           </div>
 
         ) : (
-          
+
           /* Results */
           <div className="grid-layout">
             {/* Left — chart */}
@@ -334,15 +334,15 @@ export default function RiskAnalyzer() {
       </main>
 
       {/* Mini Video Player */}
-      <div 
+      <div
         className="fixed bottom-6 left-6 w-48 aspect-video bg-black rounded-lg shadow-lg overflow-hidden cursor-pointer group border border-[var(--border)] z-40 transition-transform hover:scale-105"
         onClick={() => setIsVideoModalOpen(true)}
       >
-        <video 
-          src="https://www.w3schools.com/html/mov_bbb.mp4" 
-          autoPlay 
-          muted 
-          loop 
+        <video
+          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          autoPlay
+          muted
+          loop
           playsInline
           className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity pointer-events-none"
         />
@@ -359,7 +359,7 @@ export default function RiskAnalyzer() {
       {isVideoModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl border border-white/10">
-            <button 
+            <button
               onClick={() => setIsVideoModalOpen(false)}
               className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
             >
@@ -367,10 +367,10 @@ export default function RiskAnalyzer() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <video 
-              src="https://www.w3schools.com/html/mov_bbb.mp4" 
-              controls 
-              autoPlay 
+            <video
+              src="https://www.w3schools.com/html/mov_bbb.mp4"
+              controls
+              autoPlay
               className="w-full h-auto max-h-[80vh] outline-none"
             />
           </div>
