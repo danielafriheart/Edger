@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { FaMountainSun } from "react-icons/fa6";
 import {
   type PairCategory,
   INSTRUMENTS,
@@ -7,6 +6,7 @@ import {
   CATEGORY_INSTRUCTIONS,
   findInstrument,
 } from "../constants/trading";
+import { EdgerMark } from "../components/Logo";
 import {
   SunIcon,
   MoonIcon,
@@ -181,7 +181,9 @@ export default function RiskAnalyzer() {
       {/* Header */}
       <header className="app-header">
         <div className="logo">
-          <FaMountainSun />
+          <span className="logo-badge">
+            <EdgerMark size={11} />
+          </span>
           Edger
         </div>
         <div className="header-actions">

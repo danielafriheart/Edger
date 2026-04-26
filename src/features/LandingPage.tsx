@@ -1,18 +1,18 @@
 import { useState, type ReactNode } from "react";
-import { FaMountainSun } from "react-icons/fa6";
 import { Link } from "@tanstack/react-router";
+import { EdgerLogo, EdgerMark } from "../components/Logo";
 
 // =============================================================================
-// Edger Landing — light, consio.ai-inspired
+// Edger Landing — refined consio-inspired light direction
 // -----------------------------------------------------------------------------
-// Visual language:
-//   • Warm off-white background with a faint dotted grain
-//   • Soft pastel aurora behind the hero
-//   • Floating white pill nav with subtle shadow
-//   • Heavy Inter sans throughout (no italic accents)
-//   • Alternating product sections: pill badge → bold headline → bulleted
-//     features → black CTA, paired with a pastel-gradient-framed mockup
-//   • Dark final CTA panel + dark footer with link columns
+// Design rules
+//   1. ONE typeface family across the whole platform: Geist (sans) + Geist Mono
+//      (numbers). Mono is reserved for prices, lot sizes, pip values, tickers.
+//   2. Minimal motion: only the marquee ticker, the pulsing "Long" dot, and
+//      subtle hover-lifts on cards. No scroll animations, no fade-ins.
+//   3. Visual rhythm: section number markers ("01", "02", "03") instead of
+//      pill badges on product sections; pastel-gradient mockup frames; ghost
+//      labels behind some sections for editorial weight.
 // =============================================================================
 
 const FAQS: { q: string; a: string }[] = [
@@ -42,23 +42,35 @@ const FAQS: { q: string; a: string }[] = [
   },
 ];
 
+// Tickers used in the marquee. Each row gets duplicated for a seamless loop.
+const TICKER_ITEMS: { sym: string; pip: string }[] = [
+  { sym: "EUR/USD", pip: "$10.00" },
+  { sym: "GBP/USD", pip: "$10.00" },
+  { sym: "USD/JPY", pip: "$6.70" },
+  { sym: "XAU/USD", pip: "$1.00" },
+  { sym: "NAS100", pip: "$1.00" },
+  { sym: "US30", pip: "$1.00" },
+  { sym: "BTC/USD", pip: "$1.00" },
+  { sym: "ETH/USD", pip: "$0.10" },
+  { sym: "AUD/USD", pip: "$10.00" },
+  { sym: "EUR/GBP", pip: "$13.20" },
+  { sym: "SPX500", pip: "$1.00" },
+  { sym: "XAG/USD", pip: "$5.00" },
+];
+
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
     <div className="landing-root min-h-screen relative overflow-x-hidden">
-      {/* Background grain (very faint dot pattern, fixed) */}
+      {/* Background grain (very faint dot pattern) */}
       <div className="landing-grain fixed inset-0 pointer-events-none opacity-50 z-0" />
 
       {/* ── Floating pill nav ── */}
       <div className="fixed top-5 inset-x-0 z-50 px-4 flex justify-center">
-        <nav className="pill-nav rounded-full px-2 py-2 flex items-center gap-1 md:gap-2 max-w-3xl w-full">
-          <Link
-            to="/"
-            className="flex items-center gap-2 px-4 py-1.5 text-[15px] font-semibold tracking-tight"
-          >
-            <FaMountainSun size={16} />
-            Edger
+        <nav className="pill-nav rounded-full pl-2 pr-2 py-2 flex items-center gap-1 md:gap-2 max-w-3xl w-full">
+          <Link to="/" className="px-3 py-1.5">
+            <EdgerLogo size="md" variant="dark" />
           </Link>
 
           <div className="hidden md:flex items-center gap-1 mx-auto">
@@ -85,7 +97,7 @@ export default function LandingPage() {
       </div>
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="relative pt-40 pb-24 md:pt-44 md:pb-32 px-6 z-10">
+      <section className="relative pt-40 pb-20 md:pt-44 md:pb-24 px-6 z-10">
         {/* Soft pastel aurora behind the hero */}
         <div className="landing-aurora absolute inset-x-0 top-0 h-[700px] pointer-events-none -z-10" />
 
@@ -95,13 +107,13 @@ export default function LandingPage() {
             Now in early access
           </Pill>
 
-          <h1 className="text-[clamp(2.5rem,7vw,5rem)] font-bold leading-[1.02] tracking-[-0.035em] text-zinc-950 mb-7">
+          <h1 className="text-[clamp(2.75rem,7.5vw,5.25rem)] font-bold leading-[0.98] tracking-[-0.04em] text-zinc-950 mb-7">
             The lot size,
             <br />
             sized for you.
           </h1>
 
-          <p className="text-zinc-600 text-base md:text-lg leading-relaxed max-w-xl mx-auto mb-10">
+          <p className="text-zinc-600 text-base md:text-[17px] leading-relaxed max-w-xl mx-auto mb-10">
             Drop a chart. Set your risk. Edger calculates the exact lot size in
             under a second — across forex, metals, indices, and crypto.
           </p>
@@ -109,7 +121,7 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-7">
             <Link
               to="/app"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 transition-colors shadow-[0_2px_4px_rgba(0,0,0,0.08),0_8px_24px_-8px_rgba(0,0,0,0.15)]"
             >
               Try Edger free
               <span aria-hidden>→</span>
@@ -122,25 +134,14 @@ export default function LandingPage() {
             </a>
           </div>
 
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-zinc-500 font-mono tracking-tight">
             Free during early access · No signup needed
           </p>
-
-          {/* Subtle "what it sizes" trust strip */}
-          <div className="mt-16 flex items-center justify-center gap-6 md:gap-10 text-[11px] uppercase tracking-[0.2em] text-zinc-400 font-medium">
-            <span>Forex</span>
-            <span className="w-1 h-1 rounded-full bg-zinc-300" />
-            <span>Metals</span>
-            <span className="w-1 h-1 rounded-full bg-zinc-300" />
-            <span>Indices</span>
-            <span className="w-1 h-1 rounded-full bg-zinc-300" />
-            <span>Crypto</span>
-          </div>
         </div>
       </section>
 
       {/* ── THREE FEATURE CARDS ──────────────────────────────────────────── */}
-      <section className="relative z-10 px-6 pb-20 md:pb-32">
+      <section className="relative z-10 px-6 pt-20 md:pt-28 pb-20 md:pb-28">
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-px bg-zinc-200/70 border border-zinc-200/70 rounded-2xl overflow-hidden">
           {[
             {
@@ -163,7 +164,7 @@ export default function LandingPage() {
               key={f.h}
               className="bg-white p-8 md:p-10 flex flex-col items-center text-center"
             >
-              <div className="mb-5 w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-700">
+              <div className="mb-5 w-11 h-11 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-700">
                 {f.icon}
               </div>
               <h3 className="text-lg font-semibold tracking-tight text-zinc-950 mb-2">
@@ -179,14 +180,16 @@ export default function LandingPage() {
 
       {/* ── SECTION 1 — AI CHART VISION ──────────────────────────────────── */}
       <ProductSection
-        badge={{ icon: <SparkIcon className="w-3.5 h-3.5" />, label: "AI Chart Vision" }}
+        sectionNum="01"
+        kicker="AI Chart Vision"
+        ghost="vision"
         headline={<>Read entries, stops,<br />and targets straight from a screenshot.</>}
         bullets={[
           "Drop a chart with the long or short tool drawn — Edger reads the colored zones.",
           "Vision AI extracts entry, stop loss, and take profit automatically.",
           "Every field is editable if the AI gets it wrong — Edger never blocks you.",
         ]}
-        ctaLabel="Try the AI →"
+        ctaLabel="Try the AI"
         mockup={<TradeCard />}
         frame="mint"
       />
@@ -194,14 +197,16 @@ export default function LandingPage() {
       {/* ── SECTION 2 — UNIVERSAL SIZING ─────────────────────────────────── */}
       <ProductSection
         reverse
-        badge={{ icon: <GlobeIcon />, label: "Universal Sizing" }}
+        sectionNum="02"
+        kicker="Universal Sizing"
+        ghost="every market"
         headline={<>Sized correctly,<br />whatever you trade.</>}
         bullets={[
           "Forex majors and minors with proper pip-value math (USD-quoted exact, others approximated within 2%).",
           "JPY pairs with the correct 0.01 pip increment — no silent /10000 errors.",
           "Metals (XAU/XAG), indices (NAS100/US30/SPX500), and crypto all sized natively.",
         ]}
-        ctaLabel="See instruments →"
+        ctaLabel="See instruments"
         ctaHref="#instruments"
         mockup={<InstrumentList />}
         frame="peach"
@@ -209,24 +214,32 @@ export default function LandingPage() {
 
       {/* ── SECTION 3 — VALIDATION ──────────────────────────────────────── */}
       <ProductSection
-        badge={{ icon: <ShieldIcon className="w-3.5 h-3.5" />, label: "Sanity Checks" }}
+        sectionNum="03"
+        kicker="Sanity Checks"
+        ghost="safe sizes"
         headline={<>Catches the trade you<br />didn't mean to take.</>}
         bullets={[
           "Direction-aware validation: stop on the wrong side of entry? Edger flags it before sizing.",
           "Warns when calculated lot is below typical broker minimums or absurdly large.",
           "Pip distance, R:R ratio, profit at TP, and pip value shown clearly with every result.",
         ]}
-        ctaLabel="Open the analyzer →"
+        ctaLabel="Open the analyzer"
         mockup={<ValidationCard />}
         frame="lavender"
       />
 
       {/* ── HOW IT WORKS ─────────────────────────────────────────────────── */}
-      <section id="how" className="relative z-10 px-6 py-24 md:py-32 bg-white border-y border-zinc-100">
-        <div className="max-w-5xl mx-auto">
-          <Pill className="mb-6">How it works</Pill>
-          <h2 className="text-[clamp(2rem,5vw,3.75rem)] font-bold tracking-[-0.03em] leading-[1.02] mb-16 text-zinc-950">
-            Three steps, no friction.
+      <section
+        id="how"
+        className="relative z-10 px-6 py-24 md:py-32 bg-white border-y border-zinc-100 overflow-hidden"
+      >
+        {/* Ghost label behind the section */}
+        <div className="ghost-text absolute right-[-2rem] top-12 hidden md:block">flow</div>
+
+        <div className="max-w-5xl mx-auto relative">
+          <span className="section-num mb-6">04 · How it works</span>
+          <h2 className="text-[clamp(2.25rem,5vw,4rem)] font-bold tracking-[-0.035em] leading-[1.02] mb-16 mt-3 text-zinc-950 max-w-2xl">
+            Three steps. No friction.
           </h2>
 
           <ol className="space-y-0">
@@ -249,7 +262,7 @@ export default function LandingPage() {
             ].map(({ n, h, p }) => (
               <li
                 key={n}
-                className="grid grid-cols-[60px_1fr] md:grid-cols-[120px_1fr] gap-6 md:gap-12 items-baseline border-t border-zinc-100 py-10 first:border-t-0"
+                className="grid grid-cols-[60px_1fr] md:grid-cols-[140px_1fr] gap-6 md:gap-12 items-baseline border-t border-zinc-100 py-10 first:border-t-0"
               >
                 <span className="font-mono text-zinc-400 text-sm tabular-nums">{n}</span>
                 <div>
@@ -264,11 +277,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── INSTRUMENTS ──────────────────────────────────────────────────── */}
-      <section id="instruments" className="relative z-10 px-6 py-24 md:py-32">
-        <div className="max-w-6xl mx-auto">
-          <Pill className="mb-6">What it sizes</Pill>
-          <h2 className="text-[clamp(2rem,5vw,3.75rem)] font-bold tracking-[-0.03em] leading-[1.02] mb-12 text-zinc-950">
+      {/* ── INSTRUMENTS GRID ─────────────────────────────────────────────── */}
+      <section id="instruments" className="relative z-10 px-6 py-24 md:py-32 overflow-hidden">
+        <div className="ghost-text absolute -left-8 top-12 hidden md:block">markets</div>
+
+        <div className="max-w-6xl mx-auto relative">
+          <span className="section-num mb-6">05 · What it sizes</span>
+          <h2 className="text-[clamp(2.25rem,5vw,4rem)] font-bold tracking-[-0.035em] leading-[1.02] mt-3 mb-12 text-zinc-950 max-w-2xl">
             Every major instrument.
           </h2>
 
@@ -282,10 +297,10 @@ export default function LandingPage() {
               ["Crypto", ["BTC/USD", "ETH/USD", "SOL/USD"]],
             ].map(([cat, items]) => (
               <div key={cat as string} className="bg-white p-7 md:p-8">
-                <p className="text-[10px] tracking-[0.2em] uppercase text-zinc-500 font-semibold mb-5">
+                <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-zinc-500 font-medium mb-5">
                   {cat}
                 </p>
-                <ul className="space-y-2 text-[14px] font-mono text-zinc-800 tabular-nums">
+                <ul className="space-y-2 text-[13px] font-mono text-zinc-800 tabular-nums">
                   {(items as string[]).map((i) => (
                     <li key={i} className="flex items-center gap-3">
                       <span className="w-1 h-1 rounded-full bg-zinc-300" />
@@ -300,10 +315,15 @@ export default function LandingPage() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
-      <section id="faq" className="relative z-10 px-6 py-24 md:py-32 bg-white border-y border-zinc-100">
-        <div className="max-w-3xl mx-auto">
-          <Pill className="mb-6">Questions</Pill>
-          <h2 className="text-[clamp(2rem,5vw,3.75rem)] font-bold tracking-[-0.03em] leading-[1.02] mb-12 text-zinc-950">
+      <section
+        id="faq"
+        className="relative z-10 px-6 py-24 md:py-32 bg-white border-y border-zinc-100 overflow-hidden"
+      >
+        <div className="ghost-text absolute right-[-2rem] top-12 hidden md:block">questions</div>
+
+        <div className="max-w-3xl mx-auto relative">
+          <span className="section-num mb-6">06 · FAQ</span>
+          <h2 className="text-[clamp(2.25rem,5vw,4rem)] font-bold tracking-[-0.035em] leading-[1.02] mt-3 mb-12 text-zinc-950">
             Things people ask.
           </h2>
 
@@ -319,18 +339,16 @@ export default function LandingPage() {
                     {f.q}
                   </span>
                   <span
-                    className={`mt-1 w-6 h-6 rounded-full border border-zinc-300 flex items-center justify-center text-zinc-500 text-sm leading-none transition-transform duration-200 shrink-0 ${
-                      openFaq === i ? "rotate-45 bg-zinc-900 text-white border-zinc-900" : ""
-                    }`}
+                    className={`mt-1 w-6 h-6 rounded-full border border-zinc-300 flex items-center justify-center text-zinc-500 text-sm leading-none transition-all duration-200 shrink-0 ${openFaq === i ? "rotate-45 bg-zinc-900 text-white border-zinc-900" : ""
+                      }`}
                     aria-hidden
                   >
                     +
                   </span>
                 </div>
                 <div
-                  className={`grid transition-[grid-template-rows] duration-200 ease-out ${
-                    openFaq === i ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                  }`}
+                  className={`grid transition-[grid-template-rows] duration-200 ease-out ${openFaq === i ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                    }`}
                 >
                   <div className="overflow-hidden">
                     <p className="mt-4 text-zinc-600 leading-relaxed text-[15px] max-w-xl">
@@ -345,20 +363,29 @@ export default function LandingPage() {
       </section>
 
       {/* ── FINAL CTA (dark) ─────────────────────────────────────────────── */}
-      <section className="relative z-10 bg-zinc-950 text-white">
-        {/* Soft glow */}
+      <section className="relative z-10 bg-zinc-950 text-white overflow-hidden">
         <div
-          className="absolute inset-0 pointer-events-none opacity-40"
+          className="absolute inset-0 pointer-events-none opacity-50"
           style={{
             background:
-              "radial-gradient(ellipse at 50% 30%, rgba(167,243,208,0.15) 0%, transparent 50%), radial-gradient(ellipse at 50% 70%, rgba(233,213,255,0.10) 0%, transparent 50%)",
+              "radial-gradient(ellipse at 50% 30%, rgba(167,243,208,0.15) 0%, transparent 50%), radial-gradient(ellipse at 50% 70%, rgba(233,213,255,0.12) 0%, transparent 50%)",
           }}
         />
+        {/* Faint grid pattern */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.05]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
+          }}
+        />
+
         <div className="relative max-w-3xl mx-auto px-6 py-32 md:py-44 text-center">
-          <div className="mb-8 mx-auto w-14 h-14 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center">
-            <FaMountainSun className="text-zinc-100" size={22} />
+          <div className="mb-8 mx-auto w-14 h-14 rounded-2xl bg-white/[0.07] border border-white/15 flex items-center justify-center backdrop-blur text-zinc-100">
+            <EdgerMark size={22} />
           </div>
-          <h2 className="text-[clamp(2.25rem,6vw,4.5rem)] font-bold leading-[1.02] tracking-[-0.03em] mb-6">
+          <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[1.02] tracking-[-0.035em] mb-6">
             Stop guessing
             <br />
             your size.
@@ -376,13 +403,32 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── INSTRUMENTS TICKER (marquee) — sits just above the footer ──── */}
+      <section className="relative z-10 py-6 bg-zinc-950 border-t border-white/5 overflow-hidden">
+        <div className="edger-marquee-mask">
+          <div className="edger-marquee flex gap-12 whitespace-nowrap w-max">
+            {[...TICKER_ITEMS, ...TICKER_ITEMS].map((t, i) => (
+              <div key={i} className="flex items-center gap-3 shrink-0">
+                <span className="font-mono text-[13px] text-zinc-200 font-medium tabular-nums">
+                  {t.sym}
+                </span>
+                <span className="font-mono text-[12px] text-zinc-500 tabular-nums">
+                  {t.pip}/pip
+                </span>
+                <span className="w-1 h-1 rounded-full bg-zinc-700" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── FOOTER ───────────────────────────────────────────────────────── */}
       <footer className="relative z-10 bg-zinc-950 text-zinc-400 border-t border-white/5 px-6 pt-20 pb-10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
             <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2 text-white text-base font-semibold mb-3">
-                <FaMountainSun size={16} /> Edger
+              <div className="mb-3 text-white">
+                <EdgerLogo size="md" variant="light" />
               </div>
               <p className="text-sm leading-relaxed text-zinc-500 max-w-[16rem]">
                 The lot-sizing tool for serious retail traders.
@@ -416,11 +462,11 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-zinc-500 pt-8 border-t border-white/5">
-            <div>
+            <div className="font-mono">
               © {new Date().getFullYear()} Edger · Analytical tool, not financial advice.
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <div className="flex items-center gap-2 font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 edger-dot-pulse" />
               All systems operational
             </div>
           </div>
@@ -490,7 +536,9 @@ function FooterCol({
 
 function ProductSection({
   reverse = false,
-  badge,
+  sectionNum,
+  kicker,
+  ghost,
   headline,
   bullets,
   ctaLabel,
@@ -499,7 +547,9 @@ function ProductSection({
   frame,
 }: {
   reverse?: boolean;
-  badge: { icon: ReactNode; label: string };
+  sectionNum: string;
+  kicker: string;
+  ghost: string;
   headline: ReactNode;
   bullets: string[];
   ctaLabel: string;
@@ -511,16 +561,15 @@ function ProductSection({
     frame === "mint"
       ? "gradient-frame-mint"
       : frame === "peach"
-      ? "gradient-frame-peach"
-      : "gradient-frame-lavender";
+        ? "gradient-frame-peach"
+        : "gradient-frame-lavender";
 
   const copy = (
     <div className="max-w-md">
-      <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-zinc-200 text-[12px] font-medium text-zinc-700 mb-6">
-        <span className="text-zinc-500">{badge.icon}</span>
-        {badge.label}
+      <span className="section-num mb-5">
+        {sectionNum} · {kicker}
       </span>
-      <h2 className="text-[clamp(1.875rem,4vw,3rem)] font-bold tracking-[-0.03em] leading-[1.05] text-zinc-950 mb-7">
+      <h2 className="text-[clamp(1.875rem,4vw,3.25rem)] font-bold tracking-[-0.035em] leading-[1.04] text-zinc-950 mb-7 mt-3">
         {headline}
       </h2>
       <ul className="space-y-3 mb-8">
@@ -534,16 +583,18 @@ function ProductSection({
       {ctaHref ? (
         <a
           href={ctaHref}
-          className="inline-flex items-center px-5 py-3 rounded-full bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 transition-colors"
         >
           {ctaLabel}
+          <span aria-hidden>→</span>
         </a>
       ) : (
         <Link
           to="/app"
-          className="inline-flex items-center px-5 py-3 rounded-full bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 transition-colors"
         >
           {ctaLabel}
+          <span aria-hidden>→</span>
         </Link>
       )}
     </div>
@@ -551,15 +602,23 @@ function ProductSection({
 
   const visual = (
     <div
-      className={`relative ${frameClass} frame-grain rounded-3xl p-8 md:p-12 overflow-hidden border border-white/40 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.18)]`}
+      className={`relative ${frameClass} frame-grain rounded-3xl p-8 md:p-12 overflow-hidden border border-white/40 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.18)] hover-lift`}
     >
       {mockup}
     </div>
   );
 
   return (
-    <section className="relative z-10 px-6 py-20 md:py-28">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+    <section className="relative z-10 px-6 py-20 md:py-28 overflow-hidden">
+      {/* Ghost text behind the section */}
+      <div
+        className={`ghost-text absolute hidden md:block ${reverse ? "right-[-2rem]" : "left-[-2rem]"
+          } top-10`}
+      >
+        {ghost}
+      </div>
+
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center relative">
         {reverse ? (
           <>
             <div className="order-2 md:order-1">{visual}</div>
@@ -586,14 +645,14 @@ function TradeCard() {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-sm text-zinc-900 tracking-wide font-semibold">
+          <span className="font-mono text-sm text-zinc-900 tracking-tight font-semibold tabular-nums">
             EUR/USD
           </span>
-          <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-400 font-medium">
+          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-zinc-400 font-medium">
             Standard FX
           </span>
         </div>
-        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-semibold text-emerald-600">
+        <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] font-semibold text-emerald-600">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 edger-dot-pulse" />
           Long
         </span>
@@ -608,7 +667,7 @@ function TradeCard() {
 
       {/* Risk */}
       <div className="flex items-center justify-between text-xs pb-5 mb-5 border-b border-zinc-100">
-        <span className="text-zinc-500 uppercase tracking-[0.2em] text-[10px] font-medium">
+        <span className="font-mono text-zinc-500 uppercase tracking-[0.2em] text-[10px] font-medium">
           Risk
         </span>
         <span className="font-mono text-zinc-900 tabular-nums font-medium">$100.00</span>
@@ -616,28 +675,28 @@ function TradeCard() {
 
       {/* Result */}
       <div>
-        <div className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 mb-2 font-semibold">
+        <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 mb-2 font-medium">
           Lot Size
         </div>
         <div className="flex items-end justify-between mb-4">
-          <span className="text-5xl md:text-6xl font-bold tracking-[-0.03em] tabular-nums leading-none text-zinc-950">
+          <span className="font-mono text-5xl md:text-6xl font-medium tracking-[-0.04em] tabular-nums leading-none text-zinc-950">
             0.66
           </span>
           <div className="text-right pb-1">
-            <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-1 font-medium">
+            <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-1 font-medium">
               Profit at TP
             </div>
-            <div className="text-sm font-mono text-emerald-600 tabular-nums font-semibold">
+            <div className="font-mono text-sm text-emerald-600 tabular-nums font-semibold">
               +$200.00
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.2em] text-zinc-500 pt-3 border-t border-zinc-100 font-medium">
+        <div className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500 pt-3 border-t border-zinc-100 font-medium">
           <span>
-            R:R <span className="text-zinc-900 font-mono ml-1">1:2</span>
+            R:R <span className="text-zinc-900 ml-1">1:2</span>
           </span>
           <span className="ml-auto normal-case">
-            Pip Value <span className="text-zinc-900 font-mono ml-1">$10/lot</span>
+            Pip Value <span className="text-zinc-900 ml-1">$10/lot</span>
           </span>
         </div>
       </div>
@@ -658,21 +717,23 @@ function LevelRow({
     tone === "profit"
       ? "bg-emerald-50 border-emerald-100"
       : tone === "loss"
-      ? "bg-rose-50 border-rose-100"
-      : "bg-zinc-50 border-zinc-100";
+        ? "bg-rose-50 border-rose-100"
+        : "bg-zinc-50 border-zinc-100";
 
   const labelColor =
     tone === "profit"
       ? "text-emerald-700"
       : tone === "loss"
-      ? "text-rose-700"
-      : "text-zinc-500";
+        ? "text-rose-700"
+        : "text-zinc-500";
 
   return (
     <div
       className={`flex items-center justify-between border ${styles} rounded-md py-2.5 px-3.5`}
     >
-      <span className={`text-[10px] uppercase tracking-[0.2em] font-semibold ${labelColor}`}>
+      <span
+        className={`font-mono text-[10px] uppercase tracking-[0.2em] font-medium ${labelColor}`}
+      >
         {label}
       </span>
       <span className="font-mono text-sm text-zinc-900 tabular-nums font-medium">
@@ -697,7 +758,7 @@ function InstrumentList() {
         <span className="text-sm font-semibold text-zinc-950 tracking-tight">
           Pip values · USD account
         </span>
-        <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-medium">
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-medium">
           per 1 lot
         </span>
       </div>
@@ -712,7 +773,7 @@ function InstrumentList() {
               <span className="font-mono text-sm font-semibold text-zinc-900 tabular-nums w-20">
                 {r.sym}
               </span>
-              <span className="text-[10px] uppercase tracking-[0.18em] text-zinc-400 font-medium">
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-400 font-medium">
                 {r.cat}
               </span>
             </div>
@@ -721,8 +782,8 @@ function InstrumentList() {
         ))}
       </ul>
 
-      <div className="mt-5 pt-4 border-t border-zinc-100 text-[11px] text-zinc-500">
-        + 25 more instruments across forex, metals, indices & crypto.
+      <div className="mt-5 pt-4 border-t border-zinc-100 font-mono text-[11px] text-zinc-500">
+        + 25 more instruments across forex, metals, indices &amp; crypto.
       </div>
     </div>
   );
@@ -735,7 +796,7 @@ function ValidationCard() {
         <span className="text-sm font-semibold text-zinc-950 tracking-tight">
           Pre-trade validation
         </span>
-        <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-medium">
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-medium">
           GBP/JPY · short
         </span>
       </div>
@@ -764,10 +825,7 @@ function CheckRow({
   tone: "ok" | "warn";
   label: string;
 }) {
-  const dot =
-    tone === "ok"
-      ? "bg-emerald-500"
-      : "bg-amber-500";
+  const dot = tone === "ok" ? "bg-emerald-500" : "bg-amber-500";
   return (
     <div className="flex items-start gap-3 text-sm text-zinc-700 leading-relaxed">
       <span className={`mt-1.5 w-1.5 h-1.5 rounded-full ${dot} shrink-0`} />
@@ -787,13 +845,12 @@ function Stat({
 }) {
   return (
     <div className="bg-zinc-50 rounded-lg py-3">
-      <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-1 font-medium">
+      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-1 font-medium">
         {label}
       </div>
       <div
-        className={`font-mono text-base font-semibold tabular-nums ${
-          tone === "emerald" ? "text-emerald-600" : "text-zinc-900"
-        }`}
+        className={`font-mono text-base font-semibold tabular-nums ${tone === "emerald" ? "text-emerald-600" : "text-zinc-900"
+          }`}
       >
         {value}
       </div>
@@ -852,21 +909,6 @@ function ShieldIcon({ className = "" }: { className?: string }) {
         d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"
       />
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
-    </svg>
-  );
-}
-
-function GlobeIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      className={`w-3.5 h-3.5 ${className}`}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      strokeWidth={1.7}
-    >
-      <circle cx="12" cy="12" r="9" />
-      <path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" />
     </svg>
   );
 }
