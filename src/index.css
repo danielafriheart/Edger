@@ -1,17 +1,80 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@300..600&display=swap');
 @import "tailwindcss";
 
-/* Editorial display face used for italic accents on the landing page */
-.font-display {
-    font-family: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
-    font-weight: 400;
-    letter-spacing: -0.01em;
+/* Override Tailwind's default font stacks so `font-sans` and `font-mono`
+   utilities pick up Geist across the entire app. */
+@theme {
+    --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-/* Tighter, denser feel for the landing page */
+/* ── Landing page (light, refined consio-inspired) ───────────────────────── */
 .landing-root {
-    font-feature-settings: "ss01", "cv11";
+    font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "ss01", "ss03", "cv11";
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: #0a0a0a;
+    background: #f7f6f2;
+}
+
+/* Subtle dotted texture for the warm-white background */
+.landing-grain {
+    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.07) 1px, transparent 0);
+    background-size: 28px 28px;
+}
+
+/* Soft hero aurora — pastels behind the headline */
+.landing-aurora {
+    background:
+        radial-gradient(ellipse 60% 40% at 30% 30%, rgba(167, 243, 208, 0.5) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 35% at 70% 35%, rgba(253, 230, 138, 0.45) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 35% at 50% 70%, rgba(233, 213, 255, 0.5) 0%, transparent 60%);
+    filter: blur(2px);
+}
+
+/* Pastel gradient frames used around product mockups */
+.gradient-frame-mint {
+    background:
+        radial-gradient(ellipse at 25% 15%, #a7f3d0 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 90%, #fde68a 0%, transparent 60%),
+        linear-gradient(135deg, #ecfdf5, #fffbeb);
+}
+.gradient-frame-peach {
+    background:
+        radial-gradient(ellipse at 20% 10%, #fed7aa 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 90%, #fbcfe8 0%, transparent 60%),
+        linear-gradient(135deg, #fff7ed, #fdf2f8);
+}
+.gradient-frame-lavender {
+    background:
+        radial-gradient(ellipse at 25% 15%, #e9d5ff 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 90%, #bae6fd 0%, transparent 60%),
+        linear-gradient(135deg, #faf5ff, #eff6ff);
+}
+
+/* Soft grain overlay for the pastel frames so they don't feel flat */
+.frame-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0);
+    background-size: 6px 6px;
+    pointer-events: none;
+    border-radius: inherit;
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+}
+
+/* Floating pill nav — white surface, very soft shadow */
+.pill-nav {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow:
+        0 1px 2px rgba(0,0,0,0.04),
+        0 8px 24px -8px rgba(0,0,0,0.08);
 }
 
 /* Subtle pulsing dot used on the trade card "Long" indicator */
