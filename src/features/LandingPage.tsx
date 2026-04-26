@@ -99,7 +99,19 @@ export default function LandingPage() {
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative pt-40 pb-20 md:pt-44 md:pb-24 px-6 z-10">
         {/* Soft pastel aurora behind the hero */}
-        <div className="landing-aurora absolute inset-x-0 top-0 h-[700px] pointer-events-none -z-10" />
+        <div className="landing-aurora animate-hero-glow absolute inset-x-0 top-0 h-[700px] pointer-events-none -z-10" />
+
+        {/* Faint grid texture */}
+        <div
+          className="absolute inset-0 pointer-events-none -z-10"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+            maskImage: "linear-gradient(to bottom, black 40%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 100%)",
+          }}
+        />
 
         <div className="max-w-5xl mx-auto text-center">
           <Pill className="mb-7 mx-auto">
