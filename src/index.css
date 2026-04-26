@@ -1,8 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
 @import "tailwindcss";
 
+/* Editorial display face used for italic accents on the landing page */
+.font-display {
+    font-family: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+/* Tighter, denser feel for the landing page */
+.landing-root {
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+}
 
+/* Subtle pulsing dot used on the trade card "Long" indicator */
+@keyframes edger-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+.edger-dot-pulse {
+    animation: edger-pulse 2.4s ease-in-out infinite;
+}
 /* *{
     outline: 1px solid red;
 } */
@@ -41,13 +60,15 @@
     --result-row: #1a1a1a;
 }
 
+/* Keep box-sizing global, but DON'T reset margin/padding on every element —
+   that nukes Tailwind utilities like mx-auto, px-6, etc. Tailwind v4's
+   preflight already normalizes the elements that need normalizing. */
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
+    margin: 0;
     font-family: 'Inter', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text-primary);
@@ -55,6 +76,13 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     transition: background 0.2s, color 0.2s;
+}
+
+/* The landing page sets its own typography baseline (16px body) so Tailwind's
+   text-* utilities behave intuitively without inheriting the analyzer's 13px. */
+.landing-root {
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 /* ── Layout ─────────────────────────────────── */
@@ -472,6 +500,318 @@ body {
     left: 3px;
     color: var(--accent-text);
     font-weight: 700;
+}
+
+/* ── Direction Toggle (Long/Short) ──────────── */
+.direction-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+}
+
+.direction-btn {
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.direction-btn:hover {
+    color: var(--text-primary);
+}
+
+.direction-btn.long.active {
+    background: rgba(34, 197, 94, 0.15);
+    color: #16a34a;
+}
+
+.direction-btn.short.active {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+}
+
+.dark .direction-btn.long.active {
+    background: rgba(34, 197, 94, 0.18);
+    color: #4ade80;
+}
+
+.dark .direction-btn.short.active {
+    background: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+}
+
+/* ── Compact level grid ─────────────────────── */
+.levels-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.level-input-wrapper {
+    position: relative;
+}
+
+.level-input-wrapper input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.level-input-wrapper input:focus {
+    border-color: var(--accent);
+}
+
+/* ── Inline AI button ───────────────────────── */
+.ai-button {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: border-color 0.15s, background 0.15s;
+    font-family: inherit;
+}
+
+.ai-button:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent-text);
+    background: var(--accent-soft);
+}
+
+.ai-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ai-rationale {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-top: 4px;
+}
+
+/* ── Alert (errors / warnings) ──────────────── */
+.alert {
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.5;
+    border: 1px solid;
+}
+
+.alert.error {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+}
+
+.alert.warn {
+    background: rgba(234, 179, 8, 0.08);
+    border-color: rgba(234, 179, 8, 0.25);
+    color: #a16207;
+}
+
+.dark .alert.error {
+    color: #fca5a5;
+}
+
+.dark .alert.warn {
+    color: #fcd34d;
+}
+
+/* ── Settings drawer ────────────────────────── */
+.drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 60;
+}
+
+.drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(420px, 100%);
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    animation: drawer-in 0.2s ease-out;
+}
+
+@keyframes drawer-in {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.drawer-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.drawer-body {
+    padding: 18px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.drawer-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.drawer-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 10px;
+    font-size: 12px;
+    color: var(--text-primary);
+    font-family: 'Menlo', 'Monaco', monospace;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.drawer-input:focus {
+    border-color: var(--accent);
+}
+
+.drawer-helper {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-top: 6px;
+}
+
+.drawer-helper a {
+    color: var(--accent-text);
+    text-decoration: underline;
+}
+
+.icon-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.icon-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ── Spinner ────────────────────────────────── */
+.spinner {
+    width: 13px;
+    height: 13px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Big result hero card ───────────────────── */
+.lot-hero {
+    background: linear-gradient(135deg, var(--accent-soft), transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.lot-hero-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+    margin-bottom: 6px;
+}
+
+.lot-hero-value {
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.lot-hero-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+/* ── Header right-side cluster ──────────────── */
+.header-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
 }
 
 /* ── Responsive ─────────────────────────────── */
