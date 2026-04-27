@@ -81,7 +81,7 @@ export default function LandingPage() {
 
           <div className="ml-auto flex items-center gap-2">
             <Link
-              to="/app"
+              to="/waitlist"
               className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-zinc-100 transition-colors"
             >
               Sign in
