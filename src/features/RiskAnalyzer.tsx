@@ -209,18 +209,10 @@ export default function RiskAnalyzer() {
       {/* Background grain */}
       <div className="landing-grain absolute inset-0 pointer-events-none opacity-50 z-0" />
 
-      {/* Subtle aurora — softer than the landing's hero */}
-      <div
-        className="absolute inset-x-0 top-0 h-[520px] pointer-events-none z-0 opacity-60"
-        style={{
-          background: `
-            radial-gradient(ellipse 50% 35% at 30% 20%, rgba(167,243,208,0.4) 0%, transparent 60%),
-            radial-gradient(ellipse 45% 30% at 75% 30%, rgba(253,230,138,0.32) 0%, transparent 60%),
-            radial-gradient(ellipse 40% 25% at 50% 60%, rgba(233,213,255,0.28) 0%, transparent 60%)
-          `,
-          filter: "blur(2px)",
-        }}
-      />
+      {/* Aurora — same `landing-aurora` recipe as the rest of the platform,
+          stretched to fill the entire viewport (not just the top), at 50%
+          reduced opacity for a softer feel inside the working area. */}
+      <div className="landing-aurora absolute inset-0 pointer-events-none z-0 opacity-30" />
 
       {/* ── Floating pill nav ── */}
       <div className="absolute top-5 inset-x-0 z-50 px-4 flex justify-center">

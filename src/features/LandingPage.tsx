@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { EdgerLogo, EdgerMark } from "../components/Logo";
 
@@ -60,6 +60,38 @@ const TICKER_ITEMS: { sym: string; pip: string }[] = [
 
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Subtle scroll-reveal: any element with `data-reveal` gets `.in-view`
+  // applied the first time it crosses into the viewport. CSS handles the
+  // fade-and-translate transition; this effect just toggles the class.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    if (!elements.length) return;
+
+    if (reduceMotion) {
+      elements.forEach((el) => el.classList.add("in-view"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -60px 0px" },
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="landing-root min-h-screen relative overflow-x-hidden">
@@ -153,7 +185,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── THREE FEATURE CARDS ──────────────────────────────────────────── */}
-      <section className="relative z-10 px-6 pt-20 md:pt-28 pb-20 md:pb-28">
+      <section data-reveal className="relative z-10 px-6 pt-20 md:pt-28 pb-20 md:pb-28">
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-px bg-zinc-200/70 border border-zinc-200/70 rounded-2xl overflow-hidden">
           {[
             {
@@ -243,6 +275,7 @@ export default function LandingPage() {
       {/* ── HOW IT WORKS ─────────────────────────────────────────────────── */}
       <section
         id="how"
+        data-reveal
         className="relative z-10 px-6 py-24 md:py-32 bg-white border-y border-zinc-100 overflow-hidden"
       >
         {/* Ghost label behind the section */}
@@ -290,7 +323,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── INSTRUMENTS GRID ─────────────────────────────────────────────── */}
-      <section id="instruments" className="relative z-10 px-6 py-24 md:py-32 overflow-hidden">
+      <section id="instruments" data-reveal className="relative z-10 px-6 py-24 md:py-32 overflow-hidden">
         <div className="ghost-text absolute -left-8 top-12 hidden md:block">markets</div>
 
         <div className="max-w-6xl mx-auto relative">
@@ -329,6 +362,7 @@ export default function LandingPage() {
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       <section
         id="faq"
+        data-reveal
         className="relative z-10 px-6 py-24 md:py-32 bg-white border-y border-zinc-100 overflow-hidden"
       >
         <div className="ghost-text absolute right-[-2rem] top-12 hidden md:block">questions</div>
@@ -375,7 +409,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FINAL CTA (dark) ─────────────────────────────────────────────── */}
-      <section className="relative z-10 bg-zinc-950 text-white overflow-hidden">
+      <section data-reveal className="relative z-10 bg-zinc-950 text-white overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none opacity-50"
           style={{
@@ -621,7 +655,7 @@ function ProductSection({
   );
 
   return (
-    <section className="relative z-10 px-6 py-20 md:py-28 overflow-hidden">
+    <section data-reveal className="relative z-10 px-6 py-20 md:py-28 overflow-hidden">
       {/* Ghost text behind the section */}
       <div
         className={`ghost-text absolute hidden md:block ${reverse ? "right-[-2rem]" : "left-[-2rem]"
