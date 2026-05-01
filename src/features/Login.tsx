@@ -100,16 +100,14 @@ export default function Login() {
           <p className="text-[12px] text-zinc-500 leading-relaxed">
             By continuing, you agree to the{" "}
             <a
-              href="#"
-              onClick={(e) => e.preventDefault()}
+              href="/legal#terms"
               className="text-zinc-800 underline underline-offset-2 hover:text-zinc-900 transition-colors"
             >
               Terms
             </a>{" "}
             and{" "}
             <a
-              href="#"
-              onClick={(e) => e.preventDefault()}
+              href="/legal#privacy"
               className="text-zinc-800 underline underline-offset-2 hover:text-zinc-900 transition-colors"
             >
               Privacy Policy

@@ -500,9 +500,9 @@ export default function LandingPage() {
             <FooterCol
               title="Legal"
               links={[
-                { label: "Privacy", href: "#" },
-                { label: "Terms", href: "#" },
-                { label: "Disclaimer", href: "#" },
+                { label: "Privacy", href: "/legal#privacy" },
+                { label: "Terms", href: "/legal#terms" },
+                { label: "Disclaimer", href: "/legal#disclaimer" },
               ]}
             />
           </div>
