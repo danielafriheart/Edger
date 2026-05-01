@@ -1,3 +1,4 @@
+import { useAuth } from "@clerk/react";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
@@ -45,11 +46,12 @@ const RISK_PRESETS = [25, 50, 100, 250, 500];
 
 export default function RiskAnalyzer() {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
 
   // === API key + drawer ===
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [apiKey, setApiKey] = useState<string>("");
-  const [apiKeyDraft, setApiKeyDraft] = useState<string>("");
+  const [apiKey, setApiKey] = useState<string>(() => getStoredApiKey() ?? "");
+  const [apiKeyDraft, setApiKeyDraft] = useState<string>(() => getStoredApiKey() ?? "");
 
   // === Configure state ===
   const [image, setImage] = useState<string | null>(null);
@@ -73,11 +75,6 @@ export default function RiskAnalyzer() {
   useEffect(() => {
     // Force-disable any leftover dark-mode toggle from prior sessions.
     document.documentElement.classList.remove("dark");
-    const stored = getStoredApiKey();
-    if (stored) {
-      setApiKey(stored);
-      setApiKeyDraft(stored);
-    }
   }, []);
 
   const instrument = useMemo(
@@ -167,14 +164,16 @@ export default function RiskAnalyzer() {
     setSettingsOpen(false);
   };
 
-  const handleLogout = () => {
-    // "Logout" for Edger == clear the stored Anthropic API key (the only
-    // persistent identity we have) and route the user back to the marketing
-    // home. No real auth/session.
+  const handleLogout = async () => {
+    setSettingsOpen(false);
     setStoredApiKey("");
     setApiKey("");
     setApiKeyDraft("");
-    setSettingsOpen(false);
+    try {
+      await signOut();
+    } catch {
+      /* still leave the app locally */
+    }
     navigate({ to: "/" });
   };
 
@@ -240,8 +239,8 @@ export default function RiskAnalyzer() {
             <button
               onClick={handleLogout}
               className="inline-flex items-center px-3.5 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-rose-50 hover:text-rose-700 transition-colors"
-              aria-label="Logout"
-              title="Clear stored API key and return home"
+              aria-label="Sign out"
+              title="Sign out and clear locally stored analyzer API key"
             >
               Logout
             </button>

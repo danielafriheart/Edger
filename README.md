@@ -1,6 +1,29 @@
-# React + TypeScript + Vite
+# Edger
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Monorepo (npm workspaces): **frontend** [`apps/web`](apps/web) (React, Vite, TanStack Router, Clerk + Supabase JS) and **API** [`apps/server`](apps/server) (Hono, Clerk JWT verification, optional Supabase service-role admin helper).
+
+### Commands
+
+- `npm install` — install hoisted deps at the repo root
+- `npm run dev` — run Vite and the API together (the Vite dev server proxies `/api` to the API port)
+- `npm run dev:web` / `npm run dev:server` — one workspace only
+
+### Environment
+
+Copy the examples and fill in locally (do not commit real secrets):
+
+- [`apps/web/.env.example`](apps/web/.env.example) — `VITE_*` Clerk publishable key and Supabase URL + **`VITE_SUPABASE_PUBLISHABLE_KEY`** (Data API publishable key in the dashboard)
+- [`apps/server/.env.example`](apps/server/.env.example) — Clerk **secret**, Supabase URL + **service role** for trusted server-side use, `WEB_ORIGIN`
+
+For Clerk JWTs + Supabase Row Level Security together, configure [Clerk ↔ Supabase](https://dashboard.clerk.com/setup/supabase) and add Clerk as third-party auth in the [Supabase project](https://supabase.com/docs/guides/auth/third-party/clerk).
+
+For `/login`, use **passwordless email code** with [**sign-up-if-missing**](https://clerk.com/docs/guides/development/custom-flows/authentication/sign-in-or-up#sign-in-or-up-with-sign-upifmissing): disable **password** for sign-in, enable **sign-in + sign-up with email** using **verification code**. The route uses a **custom Edger UI** wired to Clerk’s `useSignIn` / `useSignUp` hooks (not `<SignIn />`). Include `<div id="clerk-captcha" />` on the email step while bot protection is on.
+
+The `/waitlist` page inserts into **`public.wishlist`**. Run [`supabase/migrations/20260201180000_create_wishlist.sql`](supabase/migrations/20260201180000_create_wishlist.sql) in the Supabase SQL Editor (or apply with the Supabase CLI).
+
+---
+
+## React + TypeScript + Vite (apps/web)
 
 Currently, two official plugins are available:
 

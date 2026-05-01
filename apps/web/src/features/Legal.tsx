@@ -110,6 +110,7 @@ export default function Legal() {
                 {TABS.map((t) => (
                   <button
                     key={t.id}
+                    type="button"
                     onClick={() => handleTab(t.id)}
                     className={`shrink-0 text-left px-3.5 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
                       activeTab === t.id
@@ -174,9 +175,9 @@ function PrivacyContent() {
     <div className="prose-edger">
       <SectionTitle>Privacy at a glance</SectionTitle>
       <p>
-        Edger is currently in early access. We collect very little, and we
-        don't run a backend that stores your trading data. This page lays out
-        exactly what happens when you use the app.
+        Edger is currently in early access. This page summarizes what happens
+        when you use the app and supporting services like sign-in and the
+        waitlist.
       </p>
 
       <SectionTitle>What we collect</SectionTitle>
@@ -206,18 +207,25 @@ function PrivacyContent() {
 
       <h3>When you join the waitlist</h3>
       <p>
-        If you submit your email at <code>/waitlist</code>, that email is
-        currently stored in your browser's <code>localStorage</code>. When the
-        waitlist is wired to a real email provider, the email will be
-        transmitted to that provider for the sole purpose of notifying you
-        when sign-ups open. We will not sell or share it.
+        If you submit your email at <code>/waitlist</code>, we store it in our
+        database (hosted with Supabase) so we can notify you when sign-ups
+        open. Your browser may also remember that you joined so we can show a
+        confirmation. We don't sell your email address.
+      </p>
+
+      <h3>When you sign in</h3>
+      <p>
+        Sign-in runs through Clerk. Clerk processes your email verification
+        and session; see their privacy policy for how they handle that data.
+        Supabase may receive your signed-in session token only for requests the
+        app makes on your behalf (for example syncing data you've authorized).
       </p>
 
       <SectionTitle>Cookies and tracking</SectionTitle>
       <p>
-        Edger does not use tracking cookies or third-party analytics. Some
-        local browser storage is used for app preferences and the API key as
-        described above.
+        Edger does not use tracking cookies or third-party analytics beyond what
+        authentication providers set for sessions. Local browser storage is
+        still used for app preferences and your optional analyzer API key.
       </p>
 
       <SectionTitle>Third parties</SectionTitle>
@@ -225,26 +233,26 @@ function PrivacyContent() {
         <li>
           <strong>Anthropic</strong> — when you use AI chart extraction, your
           screenshot is sent to{" "}
-          <a
-            href="https://www.anthropic.com"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a href="https://www.anthropic.com" target="_blank" rel="noreferrer">
             Anthropic
           </a>
           's API. Their privacy practices apply to that transmission.
         </li>
         <li>
-          <strong>Email service provider</strong> (TBD) — for waitlist
-          notifications, when wired up.
+          <strong>Clerk</strong> — manages sign-in sessions and verification.
+        </li>
+        <li>
+          <strong>Supabase</strong> — hosts the database used for waitlist
+          signup and optional app data gated by authentication.
         </li>
       </ul>
 
       <SectionTitle>Data deletion</SectionTitle>
       <p>
-        Clearing your browser's site data for Edger removes everything stored
-        locally — API key, waitlist email, and preferences. To remove your
-        email from the waitlist after we wire it up, contact us.
+        Clearing your browser's site data for Edger removes locally stored
+        analyzer settings and keys. Signing out clears your Clerk session here.
+        To remove waitlist submissions from our database once we offer that,
+        contact us.
       </p>
 
       <SectionTitle>Contact</SectionTitle>
@@ -269,8 +277,8 @@ function TermsContent() {
       <p>
         Edger is an analytical tool that calculates appropriate position sizes
         from inputs you provide — typically a chart screenshot and a dollar
-        risk amount. <strong>It is not financial advice.</strong> Edger does
-        not recommend trades, predict market movement, or evaluate strategies.
+        risk amount. <strong>It is not financial advice.</strong> Edger does not
+        recommend trades, predict market movement, or evaluate strategies.
       </p>
 
       <SectionTitle>Acceptable use</SectionTitle>
@@ -280,16 +288,17 @@ function TermsContent() {
           Don't attempt to reverse-engineer, scrape, or disrupt the service.
         </li>
         <li>
-          Don't upload content you don't have rights to (e.g., copyrighted
-          chart images you don't own a copy of).
+          Don't upload content you don't have rights to (for example copyrighted
+          chart images you don't have permission to process).
         </li>
       </ul>
 
       <SectionTitle>Your data</SectionTitle>
       <p>
-        You retain all rights to the screenshots, prices, and other content
-        you provide. As described in the Privacy section, Edger does not store
-        them on its own servers.
+        You retain all rights to the screenshots, prices, and other content you
+        provide. As described in the Privacy section, Edger doesn't store chart
+        content on its own servers; waitlist emails and authenticated app data
+        may be hosted with providers under our policies above.
       </p>
 
       <SectionTitle>API key responsibility</SectionTitle>
@@ -300,10 +309,11 @@ function TermsContent() {
 
       <SectionTitle>No warranties</SectionTitle>
       <p>
-        Edger is provided "as is" and "as available" without warranties of any
-        kind, express or implied. We don't guarantee uninterrupted operation,
-        accuracy of calculations against your specific broker's contract
-        sizes, or fitness for any particular trading approach.
+        Edger is provided &quot;as is&quot; and &quot;as available&quot; without
+        warranties of any kind, express or implied. We don't guarantee
+        uninterrupted operation, accuracy of calculations against your specific
+        broker's contract sizes, or fitness for any particular trading
+        approach.
       </p>
 
       <SectionTitle>Limitation of liability</SectionTitle>
@@ -316,14 +326,14 @@ function TermsContent() {
 
       <SectionTitle>Changes</SectionTitle>
       <p>
-        We may update these Terms at any time during early access. Continued
-        use of the service after changes implies acceptance.
+        We may update these Terms at any time during early access. Continued use
+        of the service after changes implies acceptance.
       </p>
 
       <SectionTitle>Termination</SectionTitle>
       <p>
-        We may suspend or terminate access to the service at any time, for
-        any reason, particularly if these Terms are violated.
+        We may suspend or terminate access to the service at any time, for any
+        reason, particularly if these Terms are violated.
       </p>
 
       <SectionTitle>Contact</SectionTitle>
@@ -342,8 +352,8 @@ function DisclaimerContent() {
       <p>
         Edger is an analytical tool. It performs arithmetic on inputs you
         provide. It does not advise, recommend, or evaluate any trade,
-        strategy, instrument, or broker. Anything you do with the output is
-        your own decision.
+        strategy, instrument, or broker. Anything you do with the output is your
+        own decision.
       </p>
 
       <SectionTitle>Trading involves risk</SectionTitle>
@@ -356,9 +366,7 @@ function DisclaimerContent() {
           On leveraged products, you may lose more than your initial deposit.
         </li>
         <li>Past performance is not indicative of future results.</li>
-        <li>
-          You should only trade with capital you can afford to lose entirely.
-        </li>
+        <li>You should only trade with capital you can afford to lose entirely.</li>
       </ul>
 
       <SectionTitle>Verify before placing trades</SectionTitle>
@@ -382,17 +390,17 @@ function DisclaimerContent() {
 
       <SectionTitle>Edger is not a broker</SectionTitle>
       <p>
-        Edger does not execute trades, hold funds, or maintain any
-        relationship with brokers. Edger is not affiliated with any broker
-        whose instruments are listed in the app.
+        Edger does not execute trades, hold funds, or maintain any relationship
+        with brokers. Edger is not affiliated with any broker whose instruments
+        are listed in the app.
       </p>
 
       <SectionTitle>Consult a professional</SectionTitle>
       <p>
-        Consult a licensed financial advisor before making investment
-        decisions. The choice of position size, instrument, or strategy
-        depends on your individual risk tolerance, financial goals, and
-        circumstances — none of which Edger evaluates.
+        Consult a licensed financial advisor before making investment decisions.
+        The choice of position size, instrument, or strategy depends on your
+        individual risk tolerance, financial goals, and circumstances — none of
+        which Edger evaluates.
       </p>
     </div>
   );
