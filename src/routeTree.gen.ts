@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as AppRouteImport } from './routes/app'
@@ -18,6 +21,21 @@ import { Route as IndexRouteImport } from './routes/index'
 const WaitlistRoute = WaitlistRouteImport.update({
   id: '/waitlist',
   path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -46,6 +64,9 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRoute
   '/legal': typeof LegalRoute
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
+  '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/waitlist': typeof WaitlistRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +74,9 @@ export interface FileRoutesByTo {
   '/app': typeof AppRoute
   '/legal': typeof LegalRoute
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
+  '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/waitlist': typeof WaitlistRoute
 }
 export interface FileRoutesById {
@@ -61,14 +85,42 @@ export interface FileRoutesById {
   '/app': typeof AppRoute
   '/legal': typeof LegalRoute
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
+  '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/waitlist': typeof WaitlistRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/legal' | '/login' | '/waitlist'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/legal'
+    | '/login'
+    | '/pricing'
+    | '/profile'
+    | '/signup'
+    | '/waitlist'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/legal' | '/login' | '/waitlist'
-  id: '__root__' | '/' | '/app' | '/legal' | '/login' | '/waitlist'
+  to:
+    | '/'
+    | '/app'
+    | '/legal'
+    | '/login'
+    | '/pricing'
+    | '/profile'
+    | '/signup'
+    | '/waitlist'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/legal'
+    | '/login'
+    | '/pricing'
+    | '/profile'
+    | '/signup'
+    | '/waitlist'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +128,9 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRoute
   LegalRoute: typeof LegalRoute
   LoginRoute: typeof LoginRoute
+  PricingRoute: typeof PricingRoute
+  ProfileRoute: typeof ProfileRoute
+  SignupRoute: typeof SignupRoute
   WaitlistRoute: typeof WaitlistRoute
 }
 
@@ -86,6 +141,27 @@ declare module '@tanstack/react-router' {
       path: '/waitlist'
       fullPath: '/waitlist'
       preLoaderRoute: typeof WaitlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -124,6 +200,9 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRoute,
   LegalRoute: LegalRoute,
   LoginRoute: LoginRoute,
+  PricingRoute: PricingRoute,
+  ProfileRoute: ProfileRoute,
+  SignupRoute: SignupRoute,
   WaitlistRoute: WaitlistRoute,
 }
 export const routeTree = rootRouteImport

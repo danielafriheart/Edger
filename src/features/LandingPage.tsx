@@ -108,18 +108,19 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-1 mx-auto">
             <NavLink href="#how">How it works</NavLink>
             <NavLink href="#instruments">Instruments</NavLink>
+            <NavLink href="/pricing">Pricing</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
           </div>
 
           <div className="ml-auto flex items-center gap-2">
             <Link
-              to="/waitlist"
+              to="/signup"
               className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-zinc-100 transition-colors"
             >
               Sign in
             </Link>
             <Link
-              to="/app"
+              to="/signup"
               className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
             >
               Try Edger
@@ -486,7 +487,8 @@ export default function LandingPage() {
               links={[
                 { label: "How it works", href: "#how" },
                 { label: "Instruments", href: "#instruments" },
-                { label: "Try Edger", href: "/app" },
+                { label: "Pricing", href: "/pricing" },
+                { label: "Try Edger", href: "/signup" },
               ]}
             />
             <FooterCol

@@ -250,7 +250,7 @@ function PrivacyContent() {
       <SectionTitle>Contact</SectionTitle>
       <p>
         Questions about privacy:{" "}
-        <a href="mailto:hello@edger.app">hello@edger.app</a>.
+        <a href="mailto:dev.edger.ai@gmail.com">dev.edger.ai@gmail.com</a>.
       </p>
     </div>
   );
@@ -329,7 +329,7 @@ function TermsContent() {
       <SectionTitle>Contact</SectionTitle>
       <p>
         Questions about these Terms:{" "}
-        <a href="mailto:hello@edger.app">hello@edger.app</a>.
+        <a href="mailto:dev.edger.ai@gmail.com">dev.edger.ai@gmail.com</a>.
       </p>
     </div>
   );

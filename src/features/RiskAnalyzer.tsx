@@ -14,8 +14,6 @@ import {
   BarIcon,
   BackIcon,
   SparkleIcon,
-  SettingsIcon,
-  CloseIcon,
   CopyIcon,
 } from "../components/Icons";
 import {
@@ -25,7 +23,8 @@ import {
   type CalcResult,
   type Direction,
 } from "../lib/calc";
-import { analyzeChart, getStoredApiKey, setStoredApiKey } from "../lib/vision";
+import { analyzeChart } from "../lib/vision";
+import { clearSession, getSession } from "../lib/auth";
 
 // =============================================================================
 // Edger Risk Analyzer — light, refined, platform-vibe
@@ -46,11 +45,6 @@ const RISK_PRESETS = [25, 50, 100, 250, 500];
 export default function RiskAnalyzer() {
   const navigate = useNavigate();
 
-  // === API key + drawer ===
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [apiKey, setApiKey] = useState<string>("");
-  const [apiKeyDraft, setApiKeyDraft] = useState<string>("");
-
   // === Configure state ===
   const [image, setImage] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -70,15 +64,15 @@ export default function RiskAnalyzer() {
   // === Result ===
   const [result, setResult] = useState<CalcResult | null>(null);
 
+  // Auth gate: /app is for signed-in users only. If there's no session,
+  // bounce to /signup. Real verification happens server-side once the
+  // backend is wired up.
   useEffect(() => {
-    // Force-disable any leftover dark-mode toggle from prior sessions.
     document.documentElement.classList.remove("dark");
-    const stored = getStoredApiKey();
-    if (stored) {
-      setApiKey(stored);
-      setApiKeyDraft(stored);
+    if (!getSession()) {
+      navigate({ to: "/signup" });
     }
-  }, []);
+  }, [navigate]);
 
   const instrument = useMemo(
     () => findInstrument(pair) ?? INSTRUMENTS[DEFAULT_CATEGORY][0],
@@ -111,16 +105,11 @@ export default function RiskAnalyzer() {
 
   const runAi = async () => {
     if (!image) return;
-    if (!apiKey) {
-      setApiKeyDraft(apiKey);
-      setSettingsOpen(true);
-      return;
-    }
     setAiError(null);
     setAiRationale(null);
     setAiLoading(true);
     try {
-      const v = await analyzeChart(image, apiKey);
+      const v = await analyzeChart(image);
       if (v.direction) setDirection(v.direction);
       if (v.entry !== null) setEntry(String(v.entry));
       if (v.stopLoss !== null) setStopLoss(String(v.stopLoss));
@@ -161,20 +150,10 @@ export default function RiskAnalyzer() {
   const canAnalyze =
     !!risk && !!entry && !!stopLoss && !!takeProfit && parseFloat(risk) > 0;
 
-  const saveApiKey = () => {
-    setStoredApiKey(apiKeyDraft.trim());
-    setApiKey(apiKeyDraft.trim());
-    setSettingsOpen(false);
-  };
-
   const handleLogout = () => {
-    // "Logout" for Edger == clear the stored Anthropic API key (the only
-    // persistent identity we have) and route the user back to the marketing
-    // home. No real auth/session.
-    setStoredApiKey("");
-    setApiKey("");
-    setApiKeyDraft("");
-    setSettingsOpen(false);
+    // Clear the local session and return to home. When the backend is wired
+    // this will also invalidate the server-side session.
+    clearSession();
     navigate({ to: "/" });
   };
 
@@ -227,21 +206,18 @@ export default function RiskAnalyzer() {
           </span>
 
           <div className="ml-auto flex items-center gap-1">
-            <button
-              onClick={() => {
-                setApiKeyDraft(apiKey);
-                setSettingsOpen(true);
-              }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-zinc-100 transition-colors"
-              aria-label="Settings"
+            <Link
+              to="/profile"
+              className="inline-flex items-center px-3.5 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-zinc-100 transition-colors"
+              aria-label="Profile"
             >
-              <SettingsIcon /> Settings
-            </button>
+              Profile
+            </Link>
             <button
               onClick={handleLogout}
               className="inline-flex items-center px-3.5 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-rose-50 hover:text-rose-700 transition-colors"
               aria-label="Logout"
-              title="Clear stored API key and return home"
+              title="Sign out and return home"
             >
               Logout
             </button>
@@ -278,7 +254,6 @@ export default function RiskAnalyzer() {
               aiLoading={aiLoading}
               aiError={aiError}
               aiRationale={aiRationale}
-              hasApiKey={!!apiKey}
               onRunAi={runAi}
               onAnalyze={handleAnalyze}
               canAnalyze={canAnalyze}
@@ -293,16 +268,6 @@ export default function RiskAnalyzer() {
           )}
         </div>
       </main>
-
-      {/* ── Settings drawer ── */}
-      {settingsOpen && (
-        <SettingsDrawer
-          apiKeyDraft={apiKeyDraft}
-          setApiKeyDraft={setApiKeyDraft}
-          onSave={saveApiKey}
-          onClose={() => setSettingsOpen(false)}
-        />
-      )}
     </div>
   );
 }
@@ -336,7 +301,6 @@ interface ConfigureViewProps {
   aiLoading: boolean;
   aiError: string | null;
   aiRationale: string | null;
-  hasApiKey: boolean;
   onRunAi: () => void;
   onAnalyze: () => void;
   canAnalyze: boolean;
@@ -373,7 +337,7 @@ function ConfigureView(p: ConfigureViewProps) {
                 ) : (
                   <>
                     <SparkleIcon />
-                    {p.hasApiKey ? "Auto-fill from chart" : "Add API key to enable AI"}
+                    Auto-fill from chart
                   </>
                 )}
               </button>
@@ -779,84 +743,6 @@ function ResultView({
         </button>
       </div>
     </div>
-  );
-}
-
-// =============================================================================
-// SETTINGS DRAWER
-// =============================================================================
-
-function SettingsDrawer({
-  apiKeyDraft,
-  setApiKeyDraft,
-  onSave,
-  onClose,
-}: {
-  apiKeyDraft: string;
-  setApiKeyDraft: (v: string) => void;
-  onSave: () => void;
-  onClose: () => void;
-}) {
-  return (
-    <>
-      <div
-        className="fixed inset-0 z-[60] bg-black/30 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <aside className="fixed top-0 right-0 bottom-0 z-[70] w-full sm:w-[420px] bg-white border-l border-zinc-200 flex flex-col animate-[drawer-in_0.2s_ease-out]">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-100">
-          <span className="text-sm font-semibold text-zinc-900 tracking-tight">
-            Settings
-          </span>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-zinc-900 hover:border-zinc-300 transition-colors"
-            aria-label="Close"
-          >
-            <CloseIcon />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-5">
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500 mb-2">
-              Anthropic API Key
-            </div>
-            <input
-              type="password"
-              placeholder="sk-ant-..."
-              value={apiKeyDraft}
-              onChange={(e) => setApiKeyDraft(e.target.value)}
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-3 text-sm font-mono text-zinc-900 focus:outline-none focus:border-zinc-400 focus:bg-white transition-colors"
-            />
-            <p className="text-xs text-zinc-500 leading-relaxed mt-3">
-              Required for AI auto-fill. Stored locally in your browser only. Get a
-              key at{" "}
-              <a
-                href="https://console.anthropic.com/settings/keys"
-                target="_blank"
-                rel="noreferrer"
-                className="text-zinc-800 underline hover:text-zinc-900"
-              >
-                console.anthropic.com
-              </a>
-              .
-            </p>
-            <p className="text-xs text-rose-700 leading-relaxed mt-3 bg-rose-50 border border-rose-100 rounded-lg px-3 py-2">
-              ⚠ Dev mode: key sent directly from the browser. For production, route
-              through your own backend.
-            </p>
-          </div>
-
-          <button
-            onClick={onSave}
-            className="w-full inline-flex items-center justify-center px-5 py-3 rounded-full bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 transition-colors"
-          >
-            Save
-          </button>
-        </div>
-      </aside>
-    </>
   );
 }
 
