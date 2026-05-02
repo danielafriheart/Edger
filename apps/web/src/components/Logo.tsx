@@ -32,10 +32,11 @@ export function EdgerMark({ size = 16, className = "", style }: EdgerMarkProps) 
       style={style}
       aria-hidden="true"
     >
-      {/* Sun, sitting just above the right peak */}
-      <circle cx="17" cy="5" r="1.9" />
-      {/* Two-peak ridge */}
-      <path d="M3 20 L9 10 L13 14 L17 9 L21 20 Z" />
+      {/* Sun — sits deliberately above the right (subordinate) peak */}
+      <circle cx="18" cy="5" r="2" />
+      {/* Two-peak ridge — taller dominant peak on the left, smaller peak on
+          the right. The asymmetry is the brand's visual signature. */}
+      <path d="M3 20 L8 7 L13 14 L17 10 L21 20 Z" />
     </svg>
   );
 }
