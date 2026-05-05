@@ -17,7 +17,9 @@ Copy the examples and fill in locally (do not commit real secrets):
 
 For Clerk JWTs + Supabase Row Level Security together, configure [Clerk ↔ Supabase](https://dashboard.clerk.com/setup/supabase) and add Clerk as third-party auth in the [Supabase project](https://supabase.com/docs/guides/auth/third-party/clerk).
 
-For `/login`, use **passwordless email code** with [**sign-up-if-missing**](https://clerk.com/docs/guides/development/custom-flows/authentication/sign-in-or-up#sign-in-or-up-with-sign-upifmissing): disable **password** for sign-in, enable **sign-in + sign-up with email** using **verification code**. The route uses a **custom Edger UI** wired to Clerk’s `useSignIn` / `useSignUp` hooks (not `<SignIn />`). Include `<div id="clerk-captcha" />` on the email step while bot protection is on.
+For **`/login`** (email + OTP only) and **`/signup`** (full name + email + OTP), use **passwordless email code** with [**sign-up-if-missing**](https://clerk.com/docs/guides/development/custom-flows/authentication/sign-in-or-up#sign-in-or-up-with-sign-upifmissing): disable **password** for sign-in, enable **sign-in + sign-up with email** using **verification code**. On sign-up, Edger maps **full name → `username`** (and splits first/last when those fields are required). Custom UI uses Clerk’s `useSignIn` / `useSignUp` (not `<SignIn />`). Keep **`<div id="clerk-captcha" />`** on the email/sign-up identity step while bot protection is on.
+
+Clerk dashboard: allow **username** (and optional **first name** / **last name**) so the profile step stays consistent; use a **Supabase JWT template** (see [`apps/web/.env.example`](apps/web/.env.example)) so the Data API accepts `Authorization` bearer tokens.
 
 The `/waitlist` page inserts into **`public.wishlist`**. Run [`supabase/migrations/20260201180000_create_wishlist.sql`](supabase/migrations/20260201180000_create_wishlist.sql) in the Supabase SQL Editor (or apply with the Supabase CLI).
 

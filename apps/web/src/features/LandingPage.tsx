@@ -114,9 +114,9 @@ export default function LandingPage() {
           <div className="ml-auto flex items-center gap-2">
             <Link
               to="/waitlist"
-              className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-zinc-100 transition-colors"
+              className="inline-flex items-center px-3 sm:px-4 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-zinc-100 transition-colors"
             >
-              Sign in
+              Join waitlist
             </Link>
             <Link
               to="/app"
@@ -486,6 +486,7 @@ export default function LandingPage() {
               links={[
                 { label: "How it works", href: "#how" },
                 { label: "Instruments", href: "#instruments" },
+                { label: "Pricing", href: "/pricing" },
                 { label: "Try Edger", href: "/app" },
               ]}
             />
@@ -493,6 +494,7 @@ export default function LandingPage() {
               title="Resources"
               links={[
                 { label: "FAQ", href: "#faq" },
+                { label: "Account", href: "/profile" },
                 { label: "Roadmap", href: "#" },
                 { label: "Changelog", href: "#" },
               ]}
