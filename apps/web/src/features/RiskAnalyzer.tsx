@@ -46,7 +46,7 @@ const RISK_PRESETS = [25, 50, 100, 250, 500];
 
 export default function RiskAnalyzer() {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { isLoaded, isSignedIn, signOut } = useAuth();
 
   // === API key + drawer ===
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -76,6 +76,13 @@ export default function RiskAnalyzer() {
     // Force-disable any leftover dark-mode toggle from prior sessions.
     document.documentElement.classList.remove("dark");
   }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (isSignedIn === false) {
+      navigate({ to: "/login", replace: true });
+    }
+  }, [isLoaded, isSignedIn, navigate]);
 
   const instrument = useMemo(
     () => findInstrument(pair) ?? INSTRUMENTS[DEFAULT_CATEGORY][0],
@@ -202,6 +209,14 @@ export default function RiskAnalyzer() {
     navigator.clipboard.writeText(lines.join("\n")).catch(() => {});
   };
 
+  if (!isLoaded || isSignedIn !== true) {
+    return (
+      <div className="landing-root h-[100svh] flex items-center justify-center text-zinc-500 font-mono text-sm">
+        Loading…
+      </div>
+    );
+  }
+
   // ───────────────────────────────────────────────────────────────────────────
   return (
     <div className="landing-root h-[100svh] relative overflow-hidden flex flex-col">
@@ -226,6 +241,12 @@ export default function RiskAnalyzer() {
           </span>
 
           <div className="ml-auto flex items-center gap-1">
+            <Link
+              to="/profile"
+              className="hidden sm:inline-flex items-center px-3.5 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-zinc-100 transition-colors"
+            >
+              Profile
+            </Link>
             <button
               onClick={() => {
                 setApiKeyDraft(apiKey);

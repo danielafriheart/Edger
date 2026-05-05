@@ -2,13 +2,13 @@ import { AuthEmailOtpFlow } from "./auth/AuthEmailOtpFlow";
 import { AuthSessionGate } from "./auth/AuthSessionGate";
 import { usePrefillEmailFromRoute } from "./auth/usePrefillEmailFromRoute";
 
-/** Email OTP → `/app`. `/signup` collects first name, last name, and email for new accounts. */
-export default function Login() {
+/** First name, last name, email + OTP; writes Clerk-native name fields (`signUp.update`) as soon as the sign-up resumes. */
+export default function Signup() {
   const prefilledEmail = usePrefillEmailFromRoute();
 
   return (
     <AuthSessionGate>
-      <AuthEmailOtpFlow chrome="login" prefilledEmail={prefilledEmail} />
+      <AuthEmailOtpFlow chrome="signup" prefilledEmail={prefilledEmail} />
     </AuthSessionGate>
   );
 }
