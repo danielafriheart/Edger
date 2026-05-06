@@ -6,17 +6,41 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+.pnpm-debug.log*
 
+# Dependencies
 node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Production
+/build
 dist
 dist-ssr
-*.local
+
+# Vercel
+.vercel
 
 # Env files (secrets / local overrides) — keep `*.env.example` for templates
 .env
 .env.*
 !.env.example
 !**/.env.example
+*.local
 
 # Editor directories and files
 .vscode/*
@@ -28,6 +52,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.pem
 
 # Cursor local workspace state — keep shared project skills/rules versioned.
 .cursor/*
