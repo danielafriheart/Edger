@@ -1,8 +1,17 @@
-import { ClerkLoaded, ClerkLoading, useAuth } from "@clerk/react";
+import { useAuth } from "@clerk/react";
 import { type ReactNode, useLayoutEffect } from "react";
-import { redirectToApp, redirectToLogin } from "./authRedirect";
+import { redirectToApp } from "./authRedirect";
+import { redirectToLogin } from "./authRedirect";
 
-function LoginBootstrapSpinner() {
+// ─────────────────────────────────────────────────────────────────────────────
+// Auth gates — the SINGLE place that decides:
+//   • signed-in user visits a protected page → show content
+//   • signed-out user visits a protected page → hard redirect to /login
+//   • signed-in user visits a guest page → hard redirect to /app
+//   • signed-out user visits a guest page → show content
+// ─────────────────────────────────────────────────────────────────────────────
+
+function AuthSpinner() {
   return (
     <div className="landing-root h-svh flex items-center justify-center">
       <span className="w-2 h-2 rounded-full bg-emerald-500 edger-dot-pulse" />
@@ -11,75 +20,38 @@ function LoginBootstrapSpinner() {
   );
 }
 
-function SignedInHardRedirect() {
-  useLayoutEffect(() => {
-    redirectToApp();
-  }, []);
+// ─── RequireSignedIn ────────────────────────────────────────────────────────
+// Wrap protected pages (e.g. /app, /profile).
+// If not signed in → redirect to /login.
+// ────────────────────────────────────────────────────────────────────────────
 
-  return <LoginBootstrapSpinner />;
-}
-
-function SignedOutHardRedirect() {
-  useLayoutEffect(() => {
-    redirectToLogin();
-  }, []);
-
-  return <LoginBootstrapSpinner />;
-}
-
-/**
- * Uses the same criterion as guarded routes (/app): `useAuth().isSignedIn` only.
- * Broader signals (session id shards, cached user refs) caused false positives and
- * a /login ⇄ /app loop when `isSignedIn` briefly disagreed post-full-reload.
- */
-function AuthenticatedInner({ children }: { children: ReactNode }) {
-  const { isSignedIn } = useAuth();
-
-  if (isSignedIn) {
-    return <SignedInHardRedirect />;
-  }
-
-  return children;
-}
-
-/**
- * Clerk bootstrap + redirect signed-in users to `/app`. Children should mount `useSignIn` / `useSignUp` only here.
- */
-export function AuthSessionGate({ children }: { children: ReactNode }) {
-  return (
-    <>
-      <ClerkLoading>
-        <LoginBootstrapSpinner />
-      </ClerkLoading>
-      <ClerkLoaded>
-        <AuthenticatedInner>{children}</AuthenticatedInner>
-      </ClerkLoaded>
-    </>
-  );
-}
-
-function RequireSignedInInner({ children }: { children: ReactNode }) {
-  const { isSignedIn } = useAuth();
-
-  if (!isSignedIn) {
-    return <SignedOutHardRedirect />;
-  }
-
-  return children;
-}
-
-/**
- * For protected UI (e.g. `/app`). Same session criterion as login redirect: {@link useAuth}.`isSignedIn` only.
- */
 export function RequireSignedIn({ children }: { children: ReactNode }) {
-  return (
-    <>
-      <ClerkLoading>
-        <LoginBootstrapSpinner />
-      </ClerkLoading>
-      <ClerkLoaded>
-        <RequireSignedInInner>{children}</RequireSignedInInner>
-      </ClerkLoaded>
-    </>
-  );
+  const { isLoaded, isSignedIn } = useAuth();
+
+  useLayoutEffect(() => {
+    if (isLoaded && !isSignedIn) redirectToLogin();
+  }, [isLoaded, isSignedIn]);
+
+  if (!isLoaded) return <AuthSpinner />;
+  if (!isSignedIn) return <AuthSpinner />; // will redirect in the effect
+
+  return children;
+}
+
+// ─── RedirectIfSignedIn ─────────────────────────────────────────────────────
+// Wrap guest-only pages (e.g. /login, /signup).
+// If already signed in → redirect to /app.
+// ────────────────────────────────────────────────────────────────────────────
+
+export function RedirectIfSignedIn({ children }: { children: ReactNode }) {
+  const { isLoaded, isSignedIn } = useAuth();
+
+  useLayoutEffect(() => {
+    if (isLoaded && isSignedIn) redirectToApp();
+  }, [isLoaded, isSignedIn]);
+
+  if (!isLoaded) return null; // don't flash the login form
+  if (isSignedIn) return null; // will redirect in the effect
+
+  return children;
 }

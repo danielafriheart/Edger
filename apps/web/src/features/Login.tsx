@@ -1,14 +1,9 @@
-import { AuthEmailOtpFlow } from "./auth/AuthEmailOtpFlow";
-import { AuthSessionGate } from "./auth/AuthSessionGate";
+import { LoginEmailOtpFlow } from "./auth/LoginEmailOtpFlow";
 import { usePrefillEmailFromRoute } from "./auth/usePrefillEmailFromRoute";
 
-/** Email OTP → `/app`. `/signup` collects first name, last name, and email for new accounts. */
+/** Email OTP → `/app`. Auth guard handled by `RedirectIfSignedIn` in the route. */
 export default function Login() {
   const prefilledEmail = usePrefillEmailFromRoute();
 
-  return (
-    <AuthSessionGate>
-      <AuthEmailOtpFlow chrome="login" prefilledEmail={prefilledEmail} />
-    </AuthSessionGate>
-  );
+  return <LoginEmailOtpFlow prefilledEmail={prefilledEmail} />;
 }

@@ -77,12 +77,7 @@ export default function RiskAnalyzer() {
     document.documentElement.classList.remove("dark");
   }, []);
 
-  useEffect(() => {
-    if (!isLoaded) return;
-    if (isSignedIn === false) {
-      navigate({ to: "/login", replace: true });
-    }
-  }, [isLoaded, isSignedIn, navigate]);
+  // Route-level RequireSignedIn handles auth loading and redirection
 
   const instrument = useMemo(
     () => findInstrument(pair) ?? INSTRUMENTS[DEFAULT_CATEGORY][0],

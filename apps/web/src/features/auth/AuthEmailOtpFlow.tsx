@@ -164,10 +164,16 @@ export function AuthEmailOtpFlow({
   }
 
   async function sendVerificationForEmail(trimmedEmail: string) {
-    // Discards an in-progress Clerk sign-in (e.g. user was on /signup code step then used "Sign in instead")
-    // so this screen always runs a fresh identifier + email_code send.
+    // Avoid `reset()` on every submit: it clears bot/CAPTCHA state and makes Clerk look like it “refreshed”. Only
+    // discard when the active attempt is for another identifier or already complete (e.g. switching email).
     try {
-      await signIn.reset();
+      if (signIn != null) {
+        const current = signIn.identifier?.trim().toLowerCase() ?? "";
+        const sameIdentifier = current === trimmedEmail;
+        if (signIn.status === "complete" || !sameIdentifier) {
+          await signIn.reset();
+        }
+      }
     } catch {
       /* best-effort — still attempt create */
     }
@@ -178,8 +184,12 @@ export function AuthEmailOtpFlow({
     });
     if (createError) {
       if (clerkErrorMeansAlreadySignedIn(createError)) {
-        redirectToApp();
-        return false;
+        const { error: resendErr } = await signIn.emailCode.sendCode();
+        if (resendErr) {
+          setFormError(clerkErrMsg(resendErr) ?? "Could not send verification code.");
+          return false;
+        }
+        return true;
       }
       setFormError(clerkErrMsg(createError) ?? "Could not start sign-in.");
       return false;
@@ -188,8 +198,7 @@ export function AuthEmailOtpFlow({
     const { error: sendError } = await signIn.emailCode.sendCode();
     if (sendError) {
       if (clerkErrorMeansAlreadySignedIn(sendError)) {
-        redirectToApp();
-        return false;
+        return true;
       }
       setFormError(clerkErrMsg(sendError) ?? "Could not send verification code.");
       return false;
@@ -277,7 +286,7 @@ export function AuthEmailOtpFlow({
 
     if (error) {
       if (clerkErrorMeansAlreadySignedIn(error)) {
-        redirectToApp();
+        await finalizeSignIn();
         return;
       }
       const transferCodes = clerkErrList(error).some((er) => er.code === "sign_up_if_missing_transfer");
@@ -490,7 +499,7 @@ export function AuthEmailOtpFlow({
               onResendCode={() =>
                 signIn.emailCode.sendCode().then(({ error }) => {
                   if (error) {
-                    if (clerkErrorMeansAlreadySignedIn(error)) redirectToApp();
+                    if (clerkErrorMeansAlreadySignedIn(error)) setFormError("Code already sent. Check your email.");
                     else setFormError(clerkErrMsg(error) ?? "Resend failed");
                   } else setFormError(null);
                 })}
@@ -567,7 +576,7 @@ export function AuthEmailOtpFlow({
             onResendCode={() =>
               signIn.emailCode.sendCode().then(({ error }) => {
                 if (error) {
-                  if (clerkErrorMeansAlreadySignedIn(error)) redirectToApp();
+                  if (clerkErrorMeansAlreadySignedIn(error)) setFormError("Code already sent. Check your email.");
                   else setFormError(clerkErrMsg(error) ?? "Resend failed");
                 } else setFormError(null);
               })}

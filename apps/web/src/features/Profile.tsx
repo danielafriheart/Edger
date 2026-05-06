@@ -58,12 +58,7 @@ export default function Profile() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!isLoaded) return;
-    if (!isSignedIn) {
-      navigate({ to: "/login" });
-    }
-  }, [isLoaded, isSignedIn, navigate]);
+// Route-level RequireSignedIn handles auth loading and redirection
 
   useEffect(() => {
     const applyHash = () => {
