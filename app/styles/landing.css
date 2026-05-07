@@ -1,0 +1,124 @@
+.landing-root {
+    font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "ss01", "ss03", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: #0a0a0a;
+    background: #f7f6f2;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.landing-grain {
+    background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.07) 1px, transparent 0);
+    background-size: 28px 28px;
+}
+
+.landing-aurora {
+    background:
+        radial-gradient(ellipse 60% 45% at 25% 30%, rgba(59, 130, 246, 0.35) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 75% 25%, rgba(14, 165, 233, 0.30) 0%, transparent 65%),
+        radial-gradient(ellipse 55% 45% at 50% 75%, rgba(99, 102, 241, 0.30) 0%, transparent 70%);
+    filter: blur(5px);
+}
+
+.gradient-frame-mint {
+    background:
+        radial-gradient(ellipse at 25% 15%, #a7f3d0 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 90%, #fde68a 0%, transparent 60%),
+        linear-gradient(135deg, #ecfdf5, #fffbeb);
+}
+
+.gradient-frame-peach {
+    background:
+        radial-gradient(ellipse at 20% 10%, #fed7aa 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 90%, #fbcfe8 0%, transparent 60%),
+        linear-gradient(135deg, #fff7ed, #fdf2f8);
+}
+
+.gradient-frame-lavender {
+    background:
+        radial-gradient(ellipse at 25% 15%, #e9d5ff 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 90%, #bae6fd 0%, transparent 60%),
+        linear-gradient(135deg, #faf5ff, #eff6ff);
+}
+
+.frame-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.4) 1px, transparent 0);
+    background-size: 6px 6px;
+    pointer-events: none;
+    border-radius: inherit;
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+}
+
+.pill-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 8px 24px -8px rgba(0, 0, 0, 0.08);
+}
+
+.edger-marquee-mask {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+.ghost-text {
+    font-family: "Geist", sans-serif;
+    font-weight: 700;
+    font-size: clamp(7rem, 16vw, 16rem);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    color: rgba(10, 10, 10, 0.035);
+    text-transform: lowercase;
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.hover-lift {
+    transition:
+        transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+        box-shadow 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+.surface-glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 30px 60px -30px rgba(0, 0, 0, 0.18);
+}
+
+.section-num {
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-num::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.4;
+}

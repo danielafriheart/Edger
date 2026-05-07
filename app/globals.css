@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@300..600&display=swap');
+@import "tailwindcss";
+
+@import "./styles/landing.css";
+@import "./styles/animations.css";
+@import "./styles/analyzer-shell.css";
+@import "./styles/analyzer-form.css";
+@import "./styles/analyzer-results.css";
+
+* {
+    scroll-behavior: smooth;
+}
+
+@theme {
+    --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+:root {
+    --bg: #f9f9f9;
+    --surface: #ffffff;
+    --border: #e5e5e5;
+    --text-primary: #111111;
+    --text-secondary: #666666;
+    --text-muted: #999999;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-soft: #eef2ff;
+    --accent-text: #4f46e5;
+    --input-bg: #f4f4f4;
+    --tag-active-bg: #111111;
+    --tag-active-text: #ffffff;
+    --result-row: #f7f7f7;
+}
+
+.dark {
+    --bg: #0d0d0d;
+    --surface: #141414;
+    --border: #222222;
+    --text-primary: #f0f0f0;
+    --text-secondary: #888888;
+    --text-muted: #555555;
+    --accent: #6366f1;
+    --accent-hover: #818cf8;
+    --accent-soft: #1e1e2e;
+    --accent-text: #818cf8;
+    --input-bg: #1a1a1a;
+    --tag-active-bg: #f0f0f0;
+    --tag-active-text: #0d0d0d;
+    --result-row: #1a1a1a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background 0.2s, color 0.2s;
+}

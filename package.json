@@ -1,20 +1,33 @@
 {
   "name": "edger",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
-    "dev": "concurrently -n web,api -c blue,magenta \"npm run dev -w @edger/web\" \"npm run dev -w @edger/server\"",
-    "dev:web": "npm run dev -w @edger/web",
-    "dev:server": "npm run dev -w @edger/server",
-    "build": "npm run build -w @edger/web && npm run build -w @edger/server",
-    "lint": "npm run lint -w @edger/web && npm run lint -w @edger/server",
-    "preview": "npm run preview -w @edger/web"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^7.3.1",
+    "@fontsource-variable/inter": "^5.2.8",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.49.8",
+    "next": "16.2.5",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-icons": "^5.6.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "concurrently": "^9.2.0"
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
