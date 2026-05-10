@@ -5,11 +5,11 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: 'Do I need an account?',
-    a: 'No. Open the app and use it. To enable AI chart reading, paste your own Anthropic API key into Settings — it stays in your browser, never on our servers.',
+    a: 'You need to sign in to open the analyzer. The lot calculator runs in your browser; paste levels from your platform or type them manually.',
   },
   {
-    q: 'How accurate is the AI chart reading?',
-    a: 'Strong on clean screenshots from TradingView, MT4/5, and similar platforms. If a level looks off, every field is editable before you calculate — Edger never blocks you on AI accuracy.',
+    q: 'Can Edger read my chart for me?',
+    a: 'Not right now — you enter entry, stop, and target (or copy them from your platform). Every field stays editable before you calculate.',
   },
   {
     q: 'What about non-USD account currencies?',
@@ -21,7 +21,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: 'Where is my data stored?',
-    a: "Nowhere we control. Screenshots go from your browser to Anthropic's API for analysis. Your API key sits in localStorage. Nothing is logged on Edger's side.",
+    a: "Trade sizing inputs stay in your session in the browser — we don't run servers that receive your chart or price levels for the calculator. Waitlist emails and authenticated app data use our database providers as described on the Privacy page.",
   },
 ];
 

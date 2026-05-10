@@ -30,8 +30,9 @@ export function Hero() {
         </h1>
 
         <p className="text-zinc-600 text-base md:text-[17px] leading-relaxed max-w-xl mx-auto mb-10">
-          Drop a chart. Set your risk. Edger calculates the exact lot size in
-          under a second — across forex, metals, indices, and crypto.
+          Add your entry, stop, and target — set your risk. Edger calculates the
+          exact lot size in under a second — across forex, metals, indices, and
+          crypto.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-7">

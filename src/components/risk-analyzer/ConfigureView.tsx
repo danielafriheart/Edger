@@ -1,14 +1,12 @@
 import { CATEGORY_LABELS, INSTRUMENTS, type Instrument, type PairCategory } from '../../constants/trading';
 import { RISK_PRESETS } from '../../constants/risk-presets';
 import type { Direction } from '../../lib/calc';
-import { BarIcon, ChevronIcon, SparkleIcon } from '../ui/Icons';
+import { BarIcon, ChevronIcon } from '../ui/Icons';
 import {
-  Alert,
   CompactCard,
   CompactCardHeader,
   CompactField,
   PriceInput,
-  Spinner,
   TriangleDown,
   TriangleUp,
 } from './AnalyzerPrimitives';
@@ -36,13 +34,10 @@ export interface ConfigureViewProps {
   setTakeProfit: (v: string) => void;
   risk: string;
   setRisk: (v: string) => void;
-  aiLoading: boolean;
-  aiError: string | null;
-  aiRationale: string | null;
-  hasApiKey: boolean;
-  onRunAi: () => void;
-  onAnalyze: () => void;
+  onAnalyze: () => void | Promise<void>;
   canAnalyze: boolean;
+  analyzing?: boolean;
+  analyzeError?: string | null;
 }
 
 export function ConfigureView(p: ConfigureViewProps) {
@@ -62,34 +57,6 @@ export function ConfigureView(p: ConfigureViewProps) {
 
           {p.image && (
             <div className="flex flex-col gap-2">
-              <button
-                onClick={p.onRunAi}
-                disabled={p.aiLoading}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-zinc-50 border border-zinc-200 text-zinc-800 text-sm font-medium hover:bg-zinc-100 hover:border-zinc-300 transition-colors disabled:opacity-50"
-              >
-                {p.aiLoading ? (
-                  <>
-                    <Spinner /> Reading chart…
-                  </>
-                ) : (
-                  <>
-                    <SparkleIcon />
-                    {p.hasApiKey ? 'Auto-fill from chart' : 'Add API key to enable AI'}
-                  </>
-                )}
-              </button>
-
-              {p.aiError && <Alert tone="error">{p.aiError}</Alert>}
-
-              {p.aiRationale && (
-                <div className="text-[12px] leading-relaxed text-emerald-900 bg-emerald-50/70 border border-emerald-200/60 rounded-lg px-3 py-2">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-emerald-700 mr-2">
-                    AI
-                  </span>
-                  {p.aiRationale}
-                </div>
-              )}
-
               <button
                 onClick={p.onRemoveImage}
                 className="text-[11px] text-zinc-500 hover:text-zinc-900 self-end transition-colors"
@@ -219,12 +186,19 @@ export function ConfigureView(p: ConfigureViewProps) {
         </CompactCard>
       </div>
 
+      {p.analyzeError ? (
+        <div className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-[12px] text-rose-900">
+          {p.analyzeError}
+        </div>
+      ) : null}
+
       <button
-        onClick={p.onAnalyze}
-        disabled={!p.canAnalyze}
+        type="button"
+        onClick={() => void p.onAnalyze()}
+        disabled={!p.canAnalyze || p.analyzing}
         className="w-1/2 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-[0_2px_4px_rgba(0,0,0,0.08),0_8px_24px_-8px_rgba(0,0,0,0.15)]"
       >
-        <BarIcon /> Calculate Lot Size
+        <BarIcon /> {p.analyzing ? 'Calculating…' : 'Calculate Lot Size'}
       </button>
     </div>
   );

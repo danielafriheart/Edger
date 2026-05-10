@@ -9,7 +9,7 @@ const FEATURES = [
   {
     icon: <SparkIcon />,
     h: 'No brain math',
-    p: 'Vision AI reads your chart, extracts the levels, sizes the trade. Five seconds, start to finish.',
+    p: 'Pip values, distance, and contract size — Edger turns your levels and dollar risk into an exact lot size.',
   },
   {
     icon: <ShieldIcon />,

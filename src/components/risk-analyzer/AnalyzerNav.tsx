@@ -1,14 +1,7 @@
 import Link from 'next/link';
-import { SettingsIcon } from '../ui/Icons';
 import { EdgerLogo } from '../ui/Logo';
 
-export function AnalyzerPillNav({
-  onOpenSettings,
-  onLogout,
-}: {
-  onOpenSettings: () => void;
-  onLogout: () => void;
-}) {
+export function AnalyzerPillNav({ onLogout }: { onLogout: () => void }) {
   return (
     <div className="absolute top-5 inset-x-0 z-50 px-4 flex justify-center">
       <nav className="pill-nav rounded-full pl-2 pr-2 py-2 flex items-center gap-1 md:gap-2 max-w-2xl w-full">
@@ -29,17 +22,9 @@ export function AnalyzerPillNav({
             Profile
           </Link>
           <button
-            onClick={onOpenSettings}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-zinc-100 transition-colors"
-            aria-label="Settings"
-          >
-            <SettingsIcon /> Settings
-          </button>
-          <button
             onClick={onLogout}
             className="inline-flex items-center px-3.5 py-2 text-sm font-medium rounded-full text-zinc-700 hover:bg-rose-50 hover:text-rose-700 transition-colors"
             aria-label="Sign out"
-            title="Sign out and clear locally stored analyzer API key"
           >
             Logout
           </button>

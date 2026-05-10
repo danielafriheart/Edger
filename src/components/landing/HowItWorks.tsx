@@ -1,8 +1,8 @@
 const STEPS = [
   {
     n: '01',
-    h: 'Drop the chart',
-    p: 'Screenshot your chart with the long or short tool drawn — the colored zones tell Edger entry, stop, and target.',
+    h: 'Load the chart',
+    p: 'Optional: keep your screenshot on screen for reference while you paste entry, stop loss, and take profit from the platform.',
   },
   {
     n: '02',

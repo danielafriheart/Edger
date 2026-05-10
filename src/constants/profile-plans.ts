@@ -8,8 +8,8 @@ export const PLAN_LABEL: Record<PlanId, string> = {
 };
 
 export const PLAN_DESCRIPTION: Record<PlanId, string> = {
-  free: '5 AI analyses per month, no card on file.',
-  payg: 'Pre-paid credits — $0.20 per AI analysis.',
-  pro_monthly: 'Unlimited AI · billed $19/month.',
-  pro_annual: 'Unlimited AI · billed $190/year (2 months free).',
+  free: 'Full manual calculator · no card on file.',
+  payg: 'Pre-paid credit balance — applies when metered features ship.',
+  pro_monthly: 'Pro workflow extras · billed $19/month.',
+  pro_annual: 'Pro workflow extras · billed $190/year (2 months free).',
 };

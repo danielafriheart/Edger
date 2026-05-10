@@ -14,20 +14,14 @@ export function PrivacyContent() {
 
       <h3>When you use the analyzer</h3>
       <p>
-        The lot-size calculator runs entirely in your browser. Nothing about
-        the trades you size is sent to Edger&apos;s servers — we don&apos;t
-        operate servers that receive that data.
+        The lot-size calculator runs entirely in your browser. Nothing about the
+        trades you size is sent to Edger&apos;s servers — we don&apos;t operate
+        servers that receive your chart image or price inputs for sizing.
       </p>
       <ul>
         <li>
-          Any Anthropic API key you provide is stored only in your browser&apos;s{' '}
-          <code>localStorage</code>. It never leaves your device, except to
-          authenticate calls you make to Anthropic.
-        </li>
-        <li>
-          Chart screenshots you upload are sent directly from your browser to
-          Anthropic&apos;s API for level extraction. Edger does not see, store,
-          or intercept these images.
+          Optional chart screenshots stay in your browser as a visual reference
+          while you edit levels; they are not uploaded to Edger for processing.
         </li>
         <li>
           App preferences (selected category, recent risk amount) are stored
@@ -55,20 +49,12 @@ export function PrivacyContent() {
       <SectionTitle>Cookies and tracking</SectionTitle>
       <p>
         Edger does not use tracking cookies or third-party analytics beyond what
-        authentication providers set for sessions. Local browser storage is
-        still used for app preferences and your optional analyzer API key.
+        authentication providers set for sessions. Local browser storage may be
+        used for app preferences.
       </p>
 
       <SectionTitle>Third parties</SectionTitle>
       <ul>
-        <li>
-          <strong>Anthropic</strong> — when you use AI chart extraction, your
-          screenshot is sent to{' '}
-          <a href="https://www.anthropic.com" target="_blank" rel="noreferrer">
-            Anthropic
-          </a>
-          &apos;s API. Their privacy practices apply to that transmission.
-        </li>
         <li>
           <strong>Clerk</strong> — manages sign-in sessions and verification.
         </li>
@@ -81,7 +67,7 @@ export function PrivacyContent() {
       <SectionTitle>Data deletion</SectionTitle>
       <p>
         Clearing your browser&apos;s site data for Edger removes locally stored
-        analyzer settings and keys. Signing out clears your Clerk session here.
+        app preferences. Signing out clears your Clerk session here.
         To remove waitlist submissions from our database once we offer that,
         contact us.
       </p>

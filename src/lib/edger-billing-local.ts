@@ -14,7 +14,7 @@ export interface EdgerBillingSlice {
 
 const DEFAULT: EdgerBillingSlice = {
   plan: "free",
-  credits: 5,
+  credits: 0,
 };
 
 export function loadEdgerBilling(): EdgerBillingSlice {

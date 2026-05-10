@@ -37,12 +37,6 @@ export function TermsContent() {
         data may be hosted with providers under our policies above.
       </p>
 
-      <SectionTitle>API key responsibility</SectionTitle>
-      <p>
-        If you provide your own Anthropic API key, you are responsible for any
-        costs incurred and any usage made through it. Keep it secure.
-      </p>
-
       <SectionTitle>No warranties</SectionTitle>
       <p>
         Edger is provided &quot;as is&quot; and &quot;as available&quot; without

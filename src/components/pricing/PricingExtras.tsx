@@ -25,10 +25,9 @@ export function PricingComparisonRow() {
               Same calculator on every plan
             </h3>
             <p className="text-zinc-600 text-[14px] leading-relaxed">
-              The lot-size math, the validation checks, the instruments
-              covered — these are identical across Free, PAYG, and Pro. The
-              difference is volume and convenience: how much AI extraction
-              you get, and the workflow features around it.
+              The lot-size math, validation checks, and instruments covered are
+              the same on every plan today. Paid tiers reserve credits or unlock
+              workflow extras as we ship billing and history features.
             </p>
           </div>
         </div>
@@ -45,9 +44,10 @@ export function PricingFaqSection() {
           Pricing questions.
         </h2>
         <div className="space-y-3">
-          <FaqRow q="Is the AI included?">
-            Yes — every plan gets AI chart extraction. Free includes 5 per
-            month, PAYG bills $0.20 each, Pro is unlimited (fair-use 500/mo).
+          <FaqRow q="Is automatic chart reading included?">
+            Not yet — you enter prices manually (with an optional screenshot for
+            context). Hosted automation is on the roadmap; credits and Pro will
+            cover it when we turn billing on for those runs.
           </FaqRow>
           <FaqRow q="Does PAYG ever expire?">
             No. Credits you buy stay on your account until used. There&apos;s

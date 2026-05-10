@@ -37,9 +37,9 @@ export function DisclaimerContent() {
           assumptions match.
         </li>
         <li>
-          AI chart extraction is approximate and may misread price levels.
-          Always review the extracted entry, stop, and target before
-          calculating.
+          You are responsible for the entry, stop-loss, and take-profit prices
+          you enter. Confirm them against your chart and broker before placing a
+          trade.
         </li>
       </ul>
 

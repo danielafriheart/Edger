@@ -30,7 +30,7 @@ app/
 src/
 ├── components/<feature>/    # presentational pieces (one per file, ≤300 LOC)
 ├── features/<feature>/      # orchestrators, hooks, server actions
-├── lib/                     # calc, vision, supabase clients, helpers
+├── lib/                     # calc, supabase clients, helpers
 ├── constants/, hooks/, types/
 proxy.ts                     # clerkMiddleware (Next 16: middleware.ts → proxy.ts)
 ```

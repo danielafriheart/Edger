@@ -19,7 +19,7 @@ function persistBilling(patch: Partial<EdgerBillingSlice>) {
 export default function Pricing() {
   const [billing, setBilling] = useState<Billing>('monthly');
 
-  const freePreset = () => persistBilling({ plan: 'free', credits: 5 });
+  const freePreset = () => persistBilling({ plan: 'free', credits: 0 });
   const paygPreset = () =>
     persistBilling({ plan: 'payg', credits: Math.max(loadEdgerBilling().credits, 50) });
   const proMonthlyPreset = () =>
@@ -62,12 +62,12 @@ export default function Pricing() {
           />
           <PlanCard
             tier="Pay as you go"
-            price="$0.20"
-            cadence="per analysis"
-            description="Buy credits, use them whenever."
+            price="From $10"
+            cadence="credit packs"
+            description="Hold a prepaid balance toward future metered features."
             features={PAYG_FEATURES}
             cta={{ label: 'Buy credits', href: '/signup', beforeNavigate: paygPreset }}
-            footnote="$10 minimum · credits never expire"
+            footnote="Credits never expire · apply when metering ships"
           />
           <PlanCard
             tier="Pro"

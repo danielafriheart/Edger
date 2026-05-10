@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+
+import type { AnalyzeRiskResponseBody } from '@/types/analyze-risk-api';
+
 import { DEFAULT_CATEGORY } from '../../constants/risk-presets';
 import {
   CATEGORY_LABELS,
@@ -15,14 +18,17 @@ import {
   type CalcResult,
   type Direction,
 } from '../../lib/calc';
-import { getStoredApiKey, setStoredApiKey } from '../../lib/vision';
-import { useVision } from './useVision';
+
+function splitDataUrl(dataUrl: string): { mimeType: string; base64: string } | null {
+  const idx = dataUrl.indexOf(';base64,');
+  if (!dataUrl.startsWith('data:') || idx === -1) return null;
+  const mimeType = dataUrl.slice('data:'.length, idx);
+  const base64 = dataUrl.slice(idx + ';base64,'.length);
+  if (!mimeType || !base64) return null;
+  return { mimeType, base64 };
+}
 
 export function useRiskAnalyzerState() {
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [apiKey, setApiKey] = useState<string>(() => getStoredApiKey() ?? '');
-  const [apiKeyDraft, setApiKeyDraft] = useState<string>(() => getStoredApiKey() ?? '');
-
   const [image, setImage] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [category, setCategory] = useState<PairCategory>(DEFAULT_CATEGORY);
@@ -34,14 +40,11 @@ export function useRiskAnalyzerState() {
   const [takeProfit, setTakeProfit] = useState('');
 
   const [result, setResult] = useState<CalcResult | null>(null);
-
-  const vision = useVision(
-    { setDirection, setEntry, setStopLoss, setTakeProfit, setCategory, setPair },
-    () => {
-      setApiKeyDraft(apiKey);
-      setSettingsOpen(true);
-    },
-  );
+  const [aiFeedback, setAiFeedback] =
+    useState<AnalyzeRiskResponseBody['aiFeedback']>(null);
+  const [persistWarning, setPersistWarning] = useState<string | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analyzeError, setAnalyzeError] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
@@ -75,33 +78,67 @@ export function useRiskAnalyzerState() {
     setPair(INSTRUMENTS[cat][0].symbol);
   };
 
-  const handleAnalyze = () => {
-    const calc = calculateTrade({
-      instrument,
-      direction,
-      entry: parseFloat(entry),
-      stopLoss: parseFloat(stopLoss),
-      takeProfit: parseFloat(takeProfit),
-      riskUSD: parseFloat(risk),
-    });
-    setResult(calc);
-    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleAnalyze = async () => {
+    setAnalyzeError(null);
+    setPersistWarning(null);
+    setAnalyzing(true);
+    try {
+      const snapshot = calculateTrade({
+        instrument,
+        direction,
+        entry: parseFloat(entry),
+        stopLoss: parseFloat(stopLoss),
+        takeProfit: parseFloat(takeProfit),
+        riskUSD: parseFloat(risk),
+      });
+
+      const payload: Record<string, unknown> = {
+        pairCategory: category,
+        instrumentSymbol: pair,
+        direction,
+        entry: snapshot.entry,
+        stopLoss: snapshot.stopLoss,
+        takeProfit: snapshot.takeProfit,
+        riskUSD: snapshot.riskUSD,
+      };
+
+      if (image?.startsWith('data:')) {
+        const bits = splitDataUrl(image);
+        if (bits) payload.image = { mimeType: bits.mimeType, base64: bits.base64 };
+      }
+
+      const res = await fetch('/api/risk/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = (await res.json()) as AnalyzeRiskResponseBody & { error?: string };
+
+      if (!res.ok) {
+        setAnalyzeError(data.error ?? `Request failed (${res.status})`);
+        return;
+      }
+
+      setResult(data.result);
+      setAiFeedback(data.aiFeedback ?? null);
+      setPersistWarning(data.persistWarning ?? null);
+      if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {
+      setAnalyzeError('Network error — try again.');
+    } finally {
+      setAnalyzing(false);
+    }
   };
 
   const canAnalyze =
     !!risk && !!entry && !!stopLoss && !!takeProfit && parseFloat(risk) > 0;
 
-  const saveApiKey = () => {
-    const trimmed = apiKeyDraft.trim();
-    setStoredApiKey(trimmed);
-    setApiKey(trimmed);
-    setSettingsOpen(false);
-  };
-
   const resetAll = () => {
     setResult(null);
-    vision.setAiError(null);
-    vision.setAiRationale(null);
+    setAiFeedback(null);
+    setPersistWarning(null);
+    setAnalyzeError(null);
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -120,26 +157,18 @@ export function useRiskAnalyzerState() {
       `Potential Profit: $${result.potentialProfitUSD.toFixed(2)}`,
       `R:R: ${formatRR(result.riskRewardRatio)}`,
     ];
+
+    if (aiFeedback?.chartSummary) {
+      lines.push('', 'Chart notes:', aiFeedback.chartSummary);
+      if (aiFeedback.structureNotes.length) {
+        for (const n of aiFeedback.structureNotes) lines.push(`- ${n}`);
+      }
+    }
+
     navigator.clipboard.writeText(lines.join('\n')).catch(() => {});
   };
 
-  const openSettingsWithDraft = () => {
-    setApiKeyDraft(apiKey);
-    setSettingsOpen(true);
-  };
-
-  const clearStoredApiKey = () => {
-    setStoredApiKey('');
-    setApiKey('');
-    setApiKeyDraft('');
-  };
-
   return {
-    settingsOpen,
-    setSettingsOpen,
-    apiKey,
-    apiKeyDraft,
-    setApiKeyDraft,
     image,
     setImage,
     dragOver,
@@ -158,17 +187,17 @@ export function useRiskAnalyzerState() {
     takeProfit,
     setTakeProfit,
     result,
+    aiFeedback,
+    persistWarning,
+    analyzing,
+    analyzeError,
     instrument,
-    vision,
     handleFileInput,
     handleDrop,
     handleCategoryChange,
     handleAnalyze,
     canAnalyze,
-    saveApiKey,
     resetAll,
     copySummary,
-    openSettingsWithDraft,
-    clearStoredApiKey,
   };
 }

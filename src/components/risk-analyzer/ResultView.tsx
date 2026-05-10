@@ -1,6 +1,9 @@
+import type { AiChartFeedbackPayload } from '@/types/analyze-risk-api';
+
 import { type CalcResult, formatRR, roundLot } from '../../lib/calc';
 import { BackIcon, CopyIcon } from '../ui/Icons';
 import { DirectionBadge, InlineStat, ResultLevelRow } from './ResultPieces';
+import { ResultAiFeedback } from './ResultAiFeedback';
 
 const KIND_LABELS: Record<CalcResult['instrument']['kind'], string> = {
   forex_jpy: 'JPY Pair',
@@ -13,11 +16,15 @@ const KIND_LABELS: Record<CalcResult['instrument']['kind'], string> = {
 export function ResultView({
   result,
   image,
+  aiFeedback,
+  persistWarning,
   onReset,
   onCopy,
 }: {
   result: CalcResult;
   image: string | null;
+  aiFeedback?: AiChartFeedbackPayload | null;
+  persistWarning?: string | null;
   onReset: () => void;
   onCopy: () => void;
 }) {
@@ -30,9 +37,14 @@ export function ResultView({
 
   return (
     <div className="flex flex-col gap-4 min-h-0">
+      {persistWarning ? (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] text-amber-950">
+          {persistWarning}
+        </div>
+      ) : null}
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-3 h-[60vh] max-h-[60vh] min-h-0">
         <ResultHero result={result} lot={lot} kindLabel={kindLabel} />
-        <ResultRightColumn result={result} image={image} />
+        <ResultRightColumn result={result} image={image} aiFeedback={aiFeedback} />
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2.5">
@@ -141,12 +153,16 @@ function ResultHero({
 function ResultRightColumn({
   result,
   image,
+  aiFeedback,
 }: {
   result: CalcResult;
   image: string | null;
+  aiFeedback?: AiChartFeedbackPayload | null;
 }) {
   return (
     <div className="flex flex-col gap-3 min-h-0 overflow-y-auto">
+      {aiFeedback ? <ResultAiFeedback feedback={aiFeedback} /> : null}
+
       <div className="bg-white rounded-2xl border border-zinc-200/70 p-4 shadow-[0_4px_30px_-12px_rgba(0,0,0,0.07)] shrink-0">
         <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-zinc-500 block mb-2.5">
           Levels

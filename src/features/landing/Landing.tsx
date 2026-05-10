@@ -28,21 +28,21 @@ export function Landing() {
 
       <ProductSection
         sectionNum="01"
-        kicker="AI Chart Vision"
-        ghost="vision"
+        kicker="Chart alongside setup"
+        ghost="workflow"
         headline={
           <>
-            Read entries, stops,
+            Keep the screenshot beside
             <br />
-            and targets straight from a screenshot.
+            entry, stop, and target inputs.
           </>
         }
         bullets={[
-          'Drop a chart with the long or short tool drawn — Edger reads the colored zones.',
-          'Vision AI extracts entry, stop loss, and take profit automatically.',
-          'Every field is editable if the AI gets it wrong — Edger never blocks you.',
+          'Drop a chart for context while you type or paste levels from your platform.',
+          'Switch category and instrument in one place — lot math stays accurate.',
+          'Every field is editable before you size — Edger never blocks you on your numbers.',
         ]}
-        ctaLabel="Try the AI"
+        ctaLabel="Open the analyzer"
         mockup={<TradeCard />}
         frame="mint"
       />

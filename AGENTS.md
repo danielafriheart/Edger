@@ -7,7 +7,7 @@ Single Next.js 16 app at the repo root (App Router, Tailwind v4):
 - `app/` — routes (`(marketing)`, `(auth)`, `(protected)`), `layout.tsx`, `globals.css`, `styles/`, `api/` route handlers, server actions live next to the feature they back.
 - `src/components/<feature>/` — presentational pieces.
 - `src/features/<feature>/` — orchestrators, hooks, server actions.
-- `src/lib/` — cross-feature utilities (`calc.ts`, `vision.ts`, `supabase/{client,server,admin}.ts`, …).
+- `src/lib/` — cross-feature utilities (`calc.ts`, `supabase/{client,server,admin}.ts`, …).
 - `src/constants/`, `src/hooks/`, `src/types/`.
 - `proxy.ts` — Clerk middleware (Next 16 renamed `middleware.ts` → `proxy.ts`).
 

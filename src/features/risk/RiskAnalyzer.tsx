@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { AnalyzerPillNav } from '../../components/risk-analyzer/AnalyzerNav';
 import { ConfigureView } from '../../components/risk-analyzer/ConfigureView';
 import { ResultView } from '../../components/risk-analyzer/ResultView';
-import { SettingsDrawer } from '../../components/risk-analyzer/SettingsDrawer';
 import { useRiskAnalyzerState } from './useRiskAnalyzerState';
 
 export default function RiskAnalyzer() {
@@ -14,8 +13,6 @@ export default function RiskAnalyzer() {
   const s = useRiskAnalyzerState();
 
   const handleLogout = async () => {
-    s.setSettingsOpen(false);
-    s.clearStoredApiKey();
     try {
       await signOut();
     } catch {
@@ -37,7 +34,7 @@ export default function RiskAnalyzer() {
       <div className="landing-grain absolute inset-0 pointer-events-none opacity-50 z-0" />
       <div className="landing-aurora absolute inset-0 pointer-events-none z-0 opacity-30" />
 
-      <AnalyzerPillNav onOpenSettings={s.openSettingsWithDraft} onLogout={() => void handleLogout()} />
+      <AnalyzerPillNav onLogout={() => void handleLogout()} />
 
       <main className="flex-1 relative z-10 pt-24 md:pt-28 pb-6 px-4 min-h-0 flex flex-col items-center justify-center">
         <div className="max-w-5xl mx-auto w-full flex flex-col">
@@ -64,28 +61,23 @@ export default function RiskAnalyzer() {
               setTakeProfit={s.setTakeProfit}
               risk={s.risk}
               setRisk={s.setRisk}
-              aiLoading={s.vision.aiLoading}
-              aiError={s.vision.aiError}
-              aiRationale={s.vision.aiRationale}
-              hasApiKey={!!s.apiKey}
-              onRunAi={() => void s.vision.runAi(s.image, s.apiKey)}
               onAnalyze={s.handleAnalyze}
               canAnalyze={s.canAnalyze}
+              analyzing={s.analyzing}
+              analyzeError={s.analyzeError}
             />
           ) : (
-            <ResultView result={s.result} image={s.image} onReset={s.resetAll} onCopy={s.copySummary} />
+            <ResultView
+              result={s.result}
+              image={s.image}
+              aiFeedback={s.aiFeedback}
+              persistWarning={s.persistWarning}
+              onReset={s.resetAll}
+              onCopy={s.copySummary}
+            />
           )}
         </div>
       </main>
-
-      {s.settingsOpen && (
-        <SettingsDrawer
-          apiKeyDraft={s.apiKeyDraft}
-          setApiKeyDraft={s.setApiKeyDraft}
-          onSave={s.saveApiKey}
-          onClose={() => s.setSettingsOpen(false)}
-        />
-      )}
     </div>
   );
 }

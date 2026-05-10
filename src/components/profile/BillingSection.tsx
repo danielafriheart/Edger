@@ -27,7 +27,7 @@ export function BillingSection({ billing }: { billing: EdgerBillingSlice }) {
           {isPayg ? (
             <PaygUsage credits={billing.credits} />
           ) : billing.plan === 'free' ? (
-            <FreeUsage credits={billing.credits} />
+            <FreeUsage />
           ) : (
             <ProUsage />
           )}
@@ -79,39 +79,29 @@ function PaygUsage({ credits }: { credits: number }) {
     <div className="bg-zinc-50 rounded-xl border border-zinc-100 px-4 py-3.5 mb-5 flex items-center justify-between">
       <div>
         <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500 mb-1">
-          Credits remaining
+          Credits on file
         </div>
         <div className="font-mono text-2xl font-medium tabular-nums tracking-[-0.02em] text-zinc-950">
           {credits}
         </div>
       </div>
-      <div className="text-right">
-        <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500 mb-1">
-          ≈ Value
-        </div>
-        <div className="font-mono text-base text-zinc-700 tabular-nums">
-          ${(credits * 0.2).toFixed(2)}
+      <div className="text-right max-w-[55%]">
+        <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500 mb-1">Status</div>
+        <div className="font-mono text-sm text-zinc-700 leading-snug">
+          Held for future metered runs when billing goes live.
         </div>
       </div>
     </div>
   );
 }
 
-function FreeUsage({ credits }: { credits: number }) {
+function FreeUsage() {
   return (
-    <div className="bg-zinc-50 rounded-xl border border-zinc-100 px-4 py-3.5 mb-5 flex items-center justify-between">
-      <div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500 mb-1">
-          AI analyses left this month
-        </div>
-        <div className="font-mono text-2xl font-medium tabular-nums tracking-[-0.02em] text-zinc-950">
-          {credits} <span className="text-zinc-400 text-base">/ 5</span>
-        </div>
-      </div>
-      <div className="text-right">
-        <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500 mb-1">Resets</div>
-        <div className="font-mono text-sm text-zinc-700">Monthly</div>
-      </div>
+    <div className="bg-zinc-50 rounded-xl border border-zinc-100 px-4 py-3.5 mb-5">
+      <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500 mb-1">Calculator</div>
+      <p className="text-sm text-zinc-700 leading-relaxed mt-1">
+        Unlimited manual lot sizing on every supported instrument — no usage cap on the math.
+      </p>
     </div>
   );
 }
@@ -120,11 +110,11 @@ function ProUsage() {
   return (
     <div className="bg-zinc-50 rounded-xl border border-zinc-100 px-4 py-3.5 mb-5">
       <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500 mb-1">
-        AI analyses
+        Workflow plan
       </div>
-      <div className="font-mono text-2xl font-medium tabular-nums tracking-[-0.02em] text-zinc-950">
-        Unlimited <span className="text-zinc-400 text-sm">(fair use)</span>
-      </div>
+      <p className="text-sm text-zinc-700 leading-relaxed mt-1">
+        History, exports, presets, and multi-currency sizing ship on this tier — see pricing for detail.
+      </p>
     </div>
   );
 }
