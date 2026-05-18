@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DisclaimerContent } from '../../components/legal/DisclaimerContent';
-import { LegalFooter, LegalPillNav } from '../../components/legal/LegalNav';
-import { PrivacyContent } from '../../components/legal/PrivacyContent';
-import { TermsContent } from '../../components/legal/TermsContent';
+import { DisclaimerContent } from '@/components/legal/DisclaimerContent';
+import { LegalFooter, LegalPillNav } from '@/components/legal/LegalNav';
+import { PrivacyContent } from '@/components/legal/PrivacyContent';
+import { TermsContent } from '@/components/legal/TermsContent';
 
 type TabId = 'privacy' | 'terms' | 'disclaimer';
 
@@ -16,14 +16,15 @@ const TABS: { id: TabId; label: string }[] = [
 
 const LAST_UPDATED = 'May 2026';
 
-export default function Legal() {
+export function LegalScreen() {
   const [activeTab, setActiveTab] = useState<TabId>('privacy');
 
   useEffect(() => {
     const applyHash = () => {
       const hash = window.location.hash.slice(1) as TabId;
-      if (TABS.some((t) => t.id === hash)) setActiveTab(hash);
+      if (TABS.some((tab) => tab.id === hash)) setActiveTab(hash);
     };
+
     applyHash();
     window.addEventListener('hashchange', applyHash);
     return () => window.removeEventListener('hashchange', applyHash);
@@ -50,8 +51,8 @@ export default function Legal() {
               The fine print.
             </h1>
             <p className="text-zinc-600 text-base md:text-[17px] leading-relaxed">
-              Everything that&apos;s normally buried at the bottom of a website,
-              kept readable and short.
+              Everything that&apos;s normally buried at the bottom of a website, kept readable and
+              short.
             </p>
           </header>
 
@@ -61,18 +62,18 @@ export default function Legal() {
                 className="flex md:flex-col gap-1.5 overflow-x-auto -mx-4 px-4 pb-2 md:overflow-visible md:pb-0 md:mx-0 md:px-0"
                 aria-label="Legal sections"
               >
-                {TABS.map((t) => (
+                {TABS.map((tab) => (
                   <button
-                    key={t.id}
+                    key={tab.id}
                     type="button"
-                    onClick={() => handleTab(t.id)}
+                    onClick={() => handleTab(tab.id)}
                     className={`shrink-0 text-left px-3.5 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                      activeTab === t.id
+                      activeTab === tab.id
                         ? 'bg-zinc-900 text-white'
                         : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
                     }`}
                   >
-                    {t.label}
+                    {tab.label}
                   </button>
                 ))}
               </nav>
@@ -81,9 +82,7 @@ export default function Legal() {
                 <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-400 mb-1.5">
                   Last updated
                 </p>
-                <p className="font-mono text-[12px] text-zinc-700">
-                  {LAST_UPDATED}
-                </p>
+                <p className="font-mono text-[12px] text-zinc-700">{LAST_UPDATED}</p>
               </div>
             </aside>
 
@@ -93,7 +92,7 @@ export default function Legal() {
               {activeTab === 'disclaimer' && <DisclaimerContent />}
 
               <p className="md:hidden mt-12 pt-6 border-t border-zinc-200 font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-500">
-                Last updated · {LAST_UPDATED}
+                Last updated - {LAST_UPDATED}
               </p>
             </article>
           </div>

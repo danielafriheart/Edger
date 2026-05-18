@@ -1,9 +1,9 @@
-import Pricing from '@/features/pricing/Pricing';
+import { PricingScreen } from './PricingScreen';
 
 export const metadata = {
   title: 'Pricing · Edger',
 };
 
 export default function PricingPage() {
-  return <Pricing />;
+  return <PricingScreen />;
 }

@@ -2,13 +2,13 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { useMemo } from 'react';
-import { AlreadySignedInCard } from '../../components/auth/AlreadySignedInCard';
-import { LoginAuthCard } from '../../components/auth/LoginAuthCard';
-import { LoginFooterLinks } from '../../components/auth/LoginFooterLinks';
-import { LoginPageLayout } from '../../components/auth/LoginPageLayout';
-import { SignupPageChrome } from '../../components/auth/SignupPageChrome';
-import { CodeStep, EmailStep, IdentityStep, ProfileStep } from './EmailOtpFlowSteps';
-import { type AuthEmailOtpChrome, useEmailOtpFlow } from './useEmailOtpFlow';
+import { AlreadySignedInCard } from '@/components/auth/AlreadySignedInCard';
+import { CodeStep, EmailStep, IdentityStep, ProfileStep } from '@/components/auth/EmailOtpFlowSteps';
+import { LoginAuthCard } from '@/components/auth/LoginAuthCard';
+import { LoginFooterLinks } from '@/components/auth/LoginFooterLinks';
+import { LoginPageLayout } from '@/components/auth/LoginPageLayout';
+import { SignupPageChrome } from '@/components/auth/SignupPageChrome';
+import { useEmailOtpFlow, type AuthEmailOtpChrome } from '@/hooks/useEmailOtpFlow';
 
 export function EmailOtpFlow({
   chrome,
@@ -18,8 +18,7 @@ export function EmailOtpFlow({
   /** From `?email=` when switching between `/login` and `/signup`. */
   prefilledEmail?: string;
 }) {
-  const { isLoaded, userId, isSignedIn } = useAuth();
-  console.log(isSignedIn, userId)
+  const { isLoaded, userId } = useAuth();
   const flow = useEmailOtpFlow({ chrome, prefilledEmail });
 
   const headlineAndSub = useMemo(() => {
