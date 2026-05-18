@@ -3,21 +3,20 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import type { AnalyzeRiskResponseBody } from '@/types/analyze-risk-api';
-
-import { DEFAULT_CATEGORY } from '../../constants/risk-presets';
+import { DEFAULT_CATEGORY } from '@/constants/risk-presets';
 import {
   CATEGORY_LABELS,
   INSTRUMENTS,
   findInstrument,
   type PairCategory,
-} from '../../constants/trading';
+} from '@/constants/trading';
 import {
   calculateTrade,
   formatRR,
   roundLot,
   type CalcResult,
   type Direction,
-} from '../../lib/calc';
+} from '@/lib/calc';
 
 function splitDataUrl(dataUrl: string): { mimeType: string; base64: string } | null {
   const idx = dataUrl.indexOf(';base64,');

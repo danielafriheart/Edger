@@ -1,4 +1,4 @@
-import { EmailOtpFlow } from '@/features/auth/EmailOtpFlow';
+import { EmailOtpFlow } from '@/components/auth/EmailOtpFlow';
 import { parsePrefillEmailFromQuery } from '@/lib/url-email-prefill';
 
 export const metadata = {

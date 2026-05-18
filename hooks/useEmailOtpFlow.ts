@@ -7,12 +7,12 @@ import {
   clerkErrMsg,
   normalizeClerkMissingFieldIds,
   type FieldBag,
-} from '../../components/auth/clerkFormHelpers';
-import { buildProfilePatch } from './buildProfilePatch';
-import { clerkErrorMeansAlreadySignedIn } from './clerkAlreadySignedIn';
-import { usernameFromFullName } from './fullNameDerived';
-import { handleSignupTransfer } from './handleSignupTransfer';
-import { sendVerificationForEmail } from './sendEmailVerification';
+} from '@/components/auth/clerkFormHelpers';
+import { buildProfilePatch } from '@/lib/auth/buildProfilePatch';
+import { clerkErrorMeansAlreadySignedIn } from '@/lib/auth/clerkAlreadySignedIn';
+import { usernameFromFullName } from '@/lib/auth/fullNameDerived';
+import { handleSignupTransfer } from '@/lib/auth/handleSignupTransfer';
+import { sendVerificationForEmail } from '@/lib/auth/sendEmailVerification';
 
 export type AuthEmailOtpChrome = 'login' | 'signup';
 export type Step = 'identity' | 'email' | 'code' | 'profile';

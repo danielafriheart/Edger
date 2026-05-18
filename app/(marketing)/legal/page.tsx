@@ -1,9 +1,9 @@
-import Legal from '@/features/legal/Legal';
+import { LegalScreen } from "./LegalScreen";
 
 export const metadata = {
-  title: 'Legal · Edger',
+  title: "Legal · Edger",
 };
 
 export default function LegalPage() {
-  return <Legal />;
+  return <LegalScreen />;
 }

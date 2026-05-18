@@ -1,10 +1,10 @@
 'use client';
 
-import { LoginCodeStep } from '../../components/auth/LoginCodeStep';
-import { LoginEmailStep } from '../../components/auth/LoginEmailStep';
-import { LoginIdentityStep } from '../../components/auth/LoginIdentityStep';
-import { LoginProfileStep } from '../../components/auth/LoginProfileStep';
-import type { useEmailOtpFlow } from './useEmailOtpFlow';
+import { LoginCodeStep } from '@/components/auth/LoginCodeStep';
+import { LoginEmailStep } from '@/components/auth/LoginEmailStep';
+import { LoginIdentityStep } from '@/components/auth/LoginIdentityStep';
+import { LoginProfileStep } from '@/components/auth/LoginProfileStep';
+import type { useEmailOtpFlow } from '@/hooks/useEmailOtpFlow';
 
 type Flow = ReturnType<typeof useEmailOtpFlow>;
 

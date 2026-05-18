@@ -1,22 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { BillingToggleGroup, type Billing } from '../../components/pricing/BillingToggle';
-import { PlanCard } from '../../components/pricing/PlanCard';
-import { PricingComparisonRow, PricingFaqSection } from '../../components/pricing/PricingExtras';
-import { PricingFooter, PricingPillNav } from '../../components/pricing/PricingNav';
-import { FREE_FEATURES, PAYG_FEATURES, PRO_FEATURES } from '../../constants/pricing';
+import { BillingToggleGroup, type Billing } from '@/components/pricing/BillingToggle';
+import { PlanCard } from '@/components/pricing/PlanCard';
+import { PricingComparisonRow, PricingFaqSection } from '@/components/pricing/PricingExtras';
+import { PricingFooter, PricingPillNav } from '@/components/pricing/PricingNav';
+import { FREE_FEATURES, PAYG_FEATURES, PRO_FEATURES } from '@/constants/pricing';
 import {
   loadEdgerBilling,
   saveEdgerBilling,
   type EdgerBillingSlice,
-} from '../../lib/edger-billing-local';
+} from '@/lib/edger-billing-local';
 
 function persistBilling(patch: Partial<EdgerBillingSlice>) {
   saveEdgerBilling({ ...loadEdgerBilling(), ...patch });
 }
 
-export default function Pricing() {
+export function PricingScreen() {
   const [billing, setBilling] = useState<Billing>('monthly');
 
   const freePreset = () => persistBilling({ plan: 'free', credits: 0 });
@@ -43,8 +43,8 @@ export default function Pricing() {
           Sized for any pace.
         </h1>
         <p className="text-zinc-600 text-base md:text-lg leading-relaxed max-w-xl mx-auto mb-10">
-          Free for casual sizers. Pay-as-you-go for occasional traders. Pro for
-          everyone trading every day.
+          Free for casual sizers. Pay-as-you-go for occasional traders. Pro for everyone trading
+          every day.
         </p>
 
         <BillingToggleGroup value={billing} onChange={setBilling} />
@@ -67,7 +67,7 @@ export default function Pricing() {
             description="Hold a prepaid balance toward future metered features."
             features={PAYG_FEATURES}
             cta={{ label: 'Buy credits', href: '/signup', beforeNavigate: paygPreset }}
-            footnote="Credits never expire · apply when metering ships"
+            footnote="Credits never expire - apply when metering ships"
           />
           <PlanCard
             tier="Pro"
@@ -81,16 +81,12 @@ export default function Pricing() {
               href: '/signup',
               beforeNavigate: billing === 'monthly' ? proMonthlyPreset : proAnnualPreset,
             }}
-            footnote={
-              billing === 'annual'
-                ? '$190 billed yearly · 2 months free'
-                : 'Cancel any time'
-            }
+            footnote={billing === 'annual' ? '$190 billed yearly - 2 months free' : 'Cancel any time'}
           />
         </div>
 
         <p className="text-center font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-500 mt-12">
-          All plans · Same accurate math · Unlimited manual sizing
+          All plans - Same accurate math - Unlimited manual sizing
         </p>
       </section>
 

@@ -1,12 +1,12 @@
-import { auth } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+import { auth } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-import { buildCalculationHistoryRow } from '@/features/risk/buildCalculationHistoryRow';
-import { fetchGeminiChartFeedback } from '@/features/risk/geminiChartFeedback';
-import { validateAnalyzeRiskBody } from '@/features/risk/validateAnalyzeRiskBody';
-import { calculateTrade } from '@/lib/calc';
-import { getSupabaseServerClient } from '@/lib/supabase/server';
-import { findInstrument } from '@/constants/trading';
+import { calculateTrade } from "@/lib/calc";
+import { buildCalculationHistoryRow } from "@/lib/risk/buildCalculationHistoryRow";
+import { fetchGeminiChartFeedback } from "@/lib/risk/geminiChartFeedback";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { validateAnalyzeRiskBody } from "@/lib/risk/validateAnalyzeRiskBody";
+import { findInstrument } from "@/constants/trading";
 
 /**
  * Clerk-authenticated sizing + optional Gemini chart notes + calculation_history insert.
@@ -15,14 +15,14 @@ import { findInstrument } from '@/constants/trading';
 export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let parsed: unknown;
   try {
     parsed = await req.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
   const validated = validateAnalyzeRiskBody(parsed);
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   const body = validated.data;
   const instrument = findInstrument(body.instrumentSymbol);
   if (!instrument) {
-    return NextResponse.json({ error: 'Unknown instrument' }, { status: 400 });
+    return NextResponse.json({ error: "Unknown instrument" }, { status: 400 });
   }
 
   const result = calculateTrade({
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
       ? await fetchGeminiChartFeedback({
           imageBase64: body.image.base64,
           mimeType: body.image.mimeType,
-          userSetupSummary: setupLines.join('\n'),
+          userSetupSummary: setupLines.join("\n"),
         })
       : null;
 
@@ -68,18 +68,12 @@ export async function POST(req: Request) {
   const supabase = await getSupabaseServerClient();
   const row = buildCalculationHistoryRow(userId, body.pairCategory, result, aiFeedback);
 
-  const { data: inserted, error } = await supabase
-    .from('calculation_history')
-    .insert(row)
-    .select('id')
-    .maybeSingle();
+  const { data: inserted, error } = await supabase.from("calculation_history").insert(row).select("id").maybeSingle();
 
   if (error) {
     persistWarning =
-      error.message.includes('JWT') || error.message.includes('PGRST')
-        ? 'History not saved — check Clerk ↔ Supabase JWT template.'
-        : 'History save failed.';
-  } else if (inserted?.id && typeof inserted.id === 'string') {
+      error.message.includes("JWT") || error.message.includes("PGRST") ? "History not saved — check Clerk ↔ Supabase JWT template." : "History save failed.";
+  } else if (inserted?.id && typeof inserted.id === "string") {
     historyId = inserted.id;
   }
 

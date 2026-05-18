@@ -1,16 +1,17 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { WaitlistPageFooter } from '../../components/waitlist/WaitlistPageFooter';
-import { WaitlistPillNav } from '../../components/waitlist/WaitlistPillNav';
-import { WaitlistSignupView } from '../../components/waitlist/WaitlistSignupView';
-import { WaitlistSubmittedView } from '../../components/waitlist/WaitlistSubmittedView';
-import { joinWaitlist } from './joinWaitlistAction';
+import { WaitlistPageFooter } from '@/components/waitlist/WaitlistPageFooter';
+import { WaitlistPillNav } from '@/components/waitlist/WaitlistPillNav';
+import { WaitlistSignupView } from '@/components/waitlist/WaitlistSignupView';
+import { WaitlistSubmittedView } from '@/components/waitlist/WaitlistSubmittedView';
+import { joinWaitlist } from '@/lib/waitlist/joinWaitlist';
 
 const STORAGE_KEY = 'edger.waitlist_email';
 
 function readStoredEmail(): string | null {
   if (typeof window === 'undefined') return null;
+
   try {
     return window.localStorage.getItem(STORAGE_KEY);
   } catch {
@@ -18,7 +19,7 @@ function readStoredEmail(): string | null {
   }
 }
 
-export default function Waitlist() {
+export function WaitlistScreen() {
   const [email, setEmail] = useState('');
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(() => readStoredEmail());
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -30,22 +31,27 @@ export default function Waitlist() {
     try {
       window.localStorage.setItem(STORAGE_KEY, normalized);
     } catch {
-      /* ignore quota / privacy mode */
+      // Ignore quota and privacy mode write failures.
     }
+
     setSubmittedEmail(normalized);
     setSubmitError(null);
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
     const trimmed = email.trim().toLowerCase();
     if (!trimmed || isPending) return;
 
     setSubmitError(null);
     startTransition(async () => {
       const result = await joinWaitlist(trimmed);
-      if (result.ok) recordSuccess(result.email);
-      else setSubmitError(result.error);
+      if (result.ok) {
+        recordSuccess(result.email);
+        return;
+      }
+
+      setSubmitError(result.error);
     });
   }
 
@@ -53,8 +59,9 @@ export default function Waitlist() {
     try {
       window.localStorage.removeItem(STORAGE_KEY);
     } catch {
-      /* ignore */
+      // Ignore quota and privacy mode delete failures.
     }
+
     setSubmittedEmail(null);
     setEmail('');
     setSubmitError(null);

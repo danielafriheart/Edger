@@ -1,21 +1,21 @@
 'use client';
 
-import { LandingPillNav } from '@/components/landing/LandingNav';
-import { Hero } from '@/components/landing/Hero';
+import { FaqSection } from '@/components/landing/FaqSection';
 import { FeatureRow } from '@/components/landing/FeatureRow';
-import { ProductSection } from '@/components/landing/ProductSection';
-import { TradeCard } from '@/components/landing/mockups/TradeCard';
-import { InstrumentList } from '@/components/landing/mockups/InstrumentList';
-import { ValidationCard } from '@/components/landing/mockups/ValidationCard';
+import { FinalCta } from '@/components/landing/FinalCta';
+import { Hero } from '@/components/landing/Hero';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { InstrumentsGrid } from '@/components/landing/InstrumentsGrid';
-import { FaqSection } from '@/components/landing/FaqSection';
-import { FinalCta } from '@/components/landing/FinalCta';
-import { MarqueeTicker } from '@/components/landing/MarqueeTicker';
 import { LandingFooter } from '@/components/landing/LandingFooter';
-import { useScrollReveal } from './useScrollReveal';
+import { LandingPillNav } from '@/components/landing/LandingNav';
+import { MarqueeTicker } from '@/components/landing/MarqueeTicker';
+import { ProductSection } from '@/components/landing/ProductSection';
+import { InstrumentList } from '@/components/landing/mockups/InstrumentList';
+import { TradeCard } from '@/components/landing/mockups/TradeCard';
+import { ValidationCard } from '@/components/landing/mockups/ValidationCard';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
-export function Landing() {
+export function LandingScreen() {
   useScrollReveal();
 
   return (
@@ -39,8 +39,8 @@ export function Landing() {
         }
         bullets={[
           'Drop a chart for context while you type or paste levels from your platform.',
-          'Switch category and instrument in one place — lot math stays accurate.',
-          'Every field is editable before you size — Edger never blocks you on your numbers.',
+          'Switch category and instrument in one place - lot math stays accurate.',
+          'Every field is editable before you size - Edger never blocks you on your numbers.',
         ]}
         ctaLabel="Open the analyzer"
         mockup={<TradeCard />}
@@ -61,7 +61,7 @@ export function Landing() {
         }
         bullets={[
           'Forex majors and minors with proper pip-value math (USD-quoted exact, others approximated within 2%).',
-          'JPY pairs with the correct 0.01 pip increment — no silent /10000 errors.',
+          'JPY pairs with the correct 0.01 pip increment - no silent /10000 errors.',
           'Metals (XAU/XAG), indices (NAS100/US30/SPX500), and crypto all sized natively.',
         ]}
         ctaLabel="See instruments"
