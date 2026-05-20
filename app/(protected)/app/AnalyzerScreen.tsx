@@ -46,7 +46,12 @@ export function AnalyzerScreen() {
               setDragOver={state.setDragOver}
               onDrop={state.handleDrop}
               onFileInput={state.handleFileInput}
-              onRemoveImage={() => state.setImage(null)}
+              imageError={state.imageError}
+              extractingLevels={state.extractingLevels}
+              extractError={state.extractError}
+              extractWarnings={state.extractWarnings}
+              extractNotice={state.extractNotice}
+              onRemoveImage={state.clearImage}
               category={state.category}
               onCategoryChange={state.handleCategoryChange}
               pair={state.pair}

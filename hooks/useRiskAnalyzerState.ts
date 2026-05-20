@@ -1,8 +1,15 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useChartLevelExtraction } from '@/hooks/useChartLevelExtraction';
+import { useChartPaste } from '@/hooks/useChartPaste';
 import type { AnalyzeRiskResponseBody } from '@/types/analyze-risk-api';
+import {
+  chartImageCompressErrorMessage,
+  validateChartImageFile,
+} from '@/lib/risk/chartImageClipboard';
+import { prepareChartImage } from '@/lib/risk/prepareChartImage';
 import { DEFAULT_CATEGORY } from '@/constants/risk-presets';
 import {
   CATEGORY_LABELS,
@@ -44,6 +51,7 @@ export function useRiskAnalyzerState() {
   const [persistWarning, setPersistWarning] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
@@ -54,27 +62,64 @@ export function useRiskAnalyzerState() {
     [pair],
   );
 
-  const handleImageUpload = (file: File) => {
-    const reader = new FileReader();
-    reader.onloadend = () => setImage(reader.result as string);
-    reader.readAsDataURL(file);
-  };
+  const handleCategoryChange = useCallback((cat: PairCategory) => {
+    setCategory(cat);
+    setPair(INSTRUMENTS[cat][0].symbol);
+  }, []);
+
+  const {
+    extracting: extractingLevels,
+    extractError,
+    extractWarnings,
+    extractNotice,
+    extractFromDataUrl,
+    clearExtractStatus,
+  } = useChartLevelExtraction({
+    setCategory,
+    setPair,
+    setDirection,
+    setEntry,
+    setStopLoss,
+    setTakeProfit,
+  });
+
+  const handleImageUpload = useCallback(
+    async (file: File) => {
+      const validationError = validateChartImageFile(file);
+      if (validationError) {
+        setImageError(validationError);
+        return;
+      }
+
+      setImageError(null);
+      clearExtractStatus();
+      try {
+        const dataUrl = await prepareChartImage(file);
+        setImage(dataUrl);
+        void extractFromDataUrl(dataUrl);
+      } catch (err) {
+        setImageError(chartImageCompressErrorMessage(err));
+      }
+    },
+    [clearExtractStatus, extractFromDataUrl],
+  );
+
+  useChartPaste({
+    onImageFile: (file) => void handleImageUpload(file),
+    enabled: result === null,
+  });
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) handleImageUpload(file);
+    if (file) void handleImageUpload(file);
+    e.target.value = '';
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
     const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) handleImageUpload(file);
-  };
-
-  const handleCategoryChange = (cat: PairCategory) => {
-    setCategory(cat);
-    setPair(INSTRUMENTS[cat][0].symbol);
+    if (file?.type.startsWith('image/')) void handleImageUpload(file);
   };
 
   const handleAnalyze = async () => {
@@ -138,7 +183,15 @@ export function useRiskAnalyzerState() {
     setAiFeedback(null);
     setPersistWarning(null);
     setAnalyzeError(null);
+    setImageError(null);
+    clearExtractStatus();
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const clearImage = () => {
+    setImage(null);
+    setImageError(null);
+    clearExtractStatus();
   };
 
   const copySummary = () => {
@@ -169,7 +222,12 @@ export function useRiskAnalyzerState() {
 
   return {
     image,
-    setImage,
+    imageError,
+    extractingLevels,
+    extractError,
+    extractWarnings,
+    extractNotice,
+    clearImage,
     dragOver,
     setDragOver,
     category,

@@ -10,6 +10,7 @@ import {
   TriangleDown,
   TriangleUp,
 } from './AnalyzerPrimitives';
+import { ChartExtractStatus } from './ChartExtractStatus';
 import { DropZone } from './DropZone';
 
 export interface ConfigureViewProps {
@@ -18,6 +19,11 @@ export interface ConfigureViewProps {
   setDragOver: (v: boolean) => void;
   onDrop: (e: React.DragEvent) => void;
   onFileInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  imageError?: string | null;
+  extractingLevels?: boolean;
+  extractError?: string | null;
+  extractWarnings?: string[];
+  extractNotice?: string | null;
   onRemoveImage: () => void;
   category: PairCategory;
   onCategoryChange: (c: PairCategory) => void;
@@ -53,6 +59,17 @@ export function ConfigureView(p: ConfigureViewProps) {
             setDragOver={p.setDragOver}
             onDrop={p.onDrop}
             onFileInput={p.onFileInput}
+          />
+
+          {p.imageError ? (
+            <p className="text-[11px] text-rose-700">{p.imageError}</p>
+          ) : null}
+
+          <ChartExtractStatus
+            extracting={p.extractingLevels ?? false}
+            error={p.extractError ?? null}
+            notice={p.extractNotice ?? null}
+            warnings={p.extractWarnings ?? []}
           />
 
           {p.image && (

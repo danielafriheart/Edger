@@ -1,8 +1,7 @@
 import { Buffer } from 'node:buffer';
 
+import { formatChartImageLimitKb, MAX_CHART_IMAGE_BYTES } from '@/constants/chart-image';
 import { INSTRUMENTS, type PairCategory } from '@/constants/trading';
-
-const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 
 const ALLOWED_IMAGE_MIME = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif']);
 
@@ -78,8 +77,12 @@ export function validateAnalyzeRiskBody(body: unknown):
     base64 = base64.replace(/\s/g, '');
     try {
       const bytes = Buffer.from(base64, 'base64').length;
-      if (bytes > MAX_IMAGE_BYTES) {
-        return { ok: false, status: 413, message: 'Image too large (max 4MB)' };
+      if (bytes > MAX_CHART_IMAGE_BYTES) {
+        return {
+          ok: false,
+          status: 413,
+          message: `Image too large (max ${formatChartImageLimitKb()})`,
+        };
       }
       if (bytes === 0) return { ok: false, status: 400, message: 'Empty image' };
     } catch {

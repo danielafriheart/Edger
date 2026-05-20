@@ -2,6 +2,7 @@ import 'server-only';
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+import { geminiModelId } from '@/lib/risk/geminiModelId';
 import { parseAiChartFeedbackJson } from '@/lib/risk/parseGeminiChartJson';
 import type { AiChartFeedbackPayload } from '@/types/analyze-risk-api';
 
@@ -9,10 +10,6 @@ const CHART_SYSTEM_INSTRUCTION = `You describe trading chart screenshots for edu
 You do not give financial advice, trade signals, or guaranteed outcomes.
 Return JSON only with keys: chartSummary (string, 1-3 sentences), structureNotes (array of short strings about visible structure), caveats (array of short strings about uncertainty or what you cannot see).
 Do not output entry/stop/take-profit prices or lot size.`;
-
-function geminiModelId(): string {
-  return process.env.GEMINI_MODEL?.trim() || 'gemini-2.0-flash';
-}
 
 export async function fetchGeminiChartFeedback(input: {
   imageBase64: string;
