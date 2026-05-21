@@ -4,7 +4,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { AnalyzerPillNav } from '../../components/risk-analyzer/AnalyzerNav';
 import { ConfigureView } from '../../components/risk-analyzer/ConfigureView';
-import { ResultView } from '../../components/risk-analyzer/ResultView';
+import { ResultModal } from '../../components/risk-analyzer/ResultModal';
 import { useRiskAnalyzerState } from './useRiskAnalyzerState';
 
 export default function RiskAnalyzer() {
@@ -38,46 +38,46 @@ export default function RiskAnalyzer() {
 
       <main className="flex-1 relative z-10 pt-24 md:pt-28 pb-6 px-4 min-h-0 flex flex-col items-center justify-center">
         <div className="max-w-5xl mx-auto w-full flex flex-col">
-          {!s.result ? (
-            <ConfigureView
-              image={s.image}
-              dragOver={s.dragOver}
-              setDragOver={s.setDragOver}
-              onDrop={s.handleDrop}
-              onFileInput={s.handleFileInput}
-              onRemoveImage={() => s.setImage(null)}
-              category={s.category}
-              onCategoryChange={s.handleCategoryChange}
-              pair={s.pair}
-              setPair={s.setPair}
-              instrument={s.instrument}
-              direction={s.direction}
-              setDirection={s.setDirection}
-              entry={s.entry}
-              setEntry={s.setEntry}
-              stopLoss={s.stopLoss}
-              setStopLoss={s.setStopLoss}
-              takeProfit={s.takeProfit}
-              setTakeProfit={s.setTakeProfit}
-              risk={s.risk}
-              setRisk={s.setRisk}
-              onAnalyze={s.handleAnalyze}
-              canAnalyze={s.canAnalyze}
-              analyzing={s.analyzing}
-              analyzeError={s.analyzeError}
-            />
-          ) : (
-            <ResultView
-              result={s.result}
-              image={s.image}
-              aiFeedback={s.aiFeedback}
-              persistWarning={s.persistWarning}
-              onReset={s.resetAll}
-              onCopy={s.copySummary}
-            />
-          )}
+          <ConfigureView
+            image={s.image}
+            dragOver={s.dragOver}
+            setDragOver={s.setDragOver}
+            onDrop={s.handleDrop}
+            onFileInput={s.handleFileInput}
+            onRemoveImage={() => s.setImage(null)}
+            category={s.category}
+            onCategoryChange={s.handleCategoryChange}
+            pair={s.pair}
+            setPair={s.setPair}
+            instrument={s.instrument}
+            direction={s.direction}
+            setDirection={s.setDirection}
+            entry={s.entry}
+            setEntry={s.setEntry}
+            stopLoss={s.stopLoss}
+            setStopLoss={s.setStopLoss}
+            takeProfit={s.takeProfit}
+            setTakeProfit={s.setTakeProfit}
+            risk={s.risk}
+            setRisk={s.setRisk}
+            onAnalyze={s.handleAnalyze}
+            canAnalyze={s.canAnalyze}
+            analyzing={s.analyzing}
+            analyzeError={s.analyzeError}
+          />
         </div>
       </main>
+
+      {/* Result/error pops up over the configure view as a modal */}
+      <ResultModal
+        open={!!s.result}
+        result={s.result}
+        image={s.image}
+        aiFeedback={s.aiFeedback}
+        persistWarning={s.persistWarning}
+        onClose={s.resetAll}
+        onCopy={s.copySummary}
+      />
     </div>
   );
 }
