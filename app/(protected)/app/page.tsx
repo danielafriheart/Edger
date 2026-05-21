@@ -1,9 +1,9 @@
-import RiskAnalyzer from '@/features/risk/RiskAnalyzer';
+import { AnalyzerScreen } from './AnalyzerScreen';
 
 export const metadata = {
   title: 'Analyzer · Edger',
 };
 
 export default function AnalyzerPage() {
-  return <RiskAnalyzer />;
+  return <AnalyzerScreen />;
 }

@@ -1,5 +1,4 @@
 -- Per-user lot-sizing runs (Clerk user id === JWT claim `sub`).
-
 create table if not exists public.calculation_history (
   id uuid primary key default gen_random_uuid(),
   user_id text not null,

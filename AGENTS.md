@@ -1,43 +1,231 @@
-# Agents
+You are a senior Next.js engineer helping me build Edger.
+Write clean, simple, maintainable code. Prioritize clarity over unnecessary abstraction.
+You should think like a senior web app developer, but explain and implement like someone building a lot size calculator for traders.
 
-## Layout
+---
 
-Single Next.js 16 app at the repo root (App Router, Tailwind v4):
+## Project Overview
 
-- `app/` — routes (`(marketing)`, `(auth)`, `(protected)`), `layout.tsx`, `globals.css`, `styles/`, `api/` route handlers, server actions live next to the feature they back.
-- `src/components/<feature>/` — presentational pieces.
-- `src/features/<feature>/` — orchestrators, hooks, server actions.
-- `src/lib/` — cross-feature utilities (`calc.ts`, `supabase/{client,server,admin}.ts`, …).
-- `src/constants/`, `src/hooks/`, `src/types/`.
-- `proxy.ts` — Clerk middleware (Next 16 renamed `middleware.ts` → `proxy.ts`).
+We are building Edger, a lot size calculator for traders.
 
-There is no `apps/` directory and no Hono server. All server work is done from Server Components, Server Actions, and `app/api/*` route handlers.
+The app helps traders calculate lot sizes for trades they want to take and it includes:
+- a lot size calculator based on trader(user) manual input
+- an image processor that reads the data from traders(user) pasted chart
+- a lot size calculator based on extracted image data from the pasted trade chart if there is any
+- subscription base lot size calculation
+- Profile management with clerk
+- subscription monitoring
 
-## Auth + Supabase
+---
 
-- **Clerk:** `@clerk/nextjs`. `proxy.ts` redirects unauthenticated users away from `/app` and `/profile`. `/login` and `/signup` stay reachable when signed in so the UI can show “Already signed in” and sign out.
-- **Supabase clients (`src/lib/supabase/`):**
-  - `client.ts` — browser client with a custom `fetch` that injects the Clerk Supabase template JWT (`useAuth().getToken({ template: 'supabase' })`). Used in Client Components.
-  - `server.ts` — per-request server client; reads `auth().getToken({ template: 'supabase' })` from `@clerk/nextjs/server` and attaches it. Used in Server Components, Server Actions, and route handlers.
-  - `admin.ts` — service-role; tagged `import 'server-only'`. For webhooks/cron only, never imported from a Client Component.
+## Tech Stack
 
-The Clerk ↔ Supabase third-party auth + `supabase` JWT template must be configured in both dashboards. Without it, server-side Supabase calls return 401s on RLS reads.
+- Next JS
 
-## Modularity
+- TypeScript
 
-Hard cap: every `.ts`, `.tsx`, and `.css` file under **300 lines**. See [`.cursor/rules/modular-files.mdc`](./.cursor/rules/modular-files.mdc) for splitting guidance.
+- Clerk for authentication
 
-## Security reviews
+- Supabase for database
 
-Security guidance for AI-assisted coding lives in the **vibe-security** project skill:
+- Zustand
 
-- [`./.cursor/skills/vibe-security/SKILL.md`](./.cursor/skills/vibe-security/SKILL.md)
-- Supporting references: [`.cursor/skills/vibe-security/references/`](./.cursor/skills/vibe-security/references/)
+- Gemini AI for image processing
 
-Use it whenever changing auth (Clerk), Supabase schemas or RLS, route handlers / server actions, environment variables, or anything handling user data.
+Do not introduce new major libraries unless there is a strong reason.
+Ask before installing anything new.
 
-## Next 16 caveats
+---
 
-- The middleware file is `proxy.ts`, not `middleware.ts`. Same API surface (`clerkMiddleware`, `createRouteMatcher`, `NextResponse`).
-- Read the relevant page in `node_modules/next/dist/docs/` before touching anything proxy-, route-, or caching-related — Next 16 ships breaking changes from 15.
-- `@clerk/react` (Vite) and `@clerk/nextjs` have different surfaces. Use `@clerk/nextjs` everywhere; the OTP flow already does.
+## Development Philosophy
+
+Build feature by feature.
+For every feature:
+1. Read this file first.
+
+2. Keep the implementation simple.
+
+3. Avoid overengineering.
+
+4. Prefer readable code over clever code.
+
+5. Build the smallest useful version first.
+
+6. Refactor only when repetition appears.
+
+---
+
+## Decision Making
+
+If something is unclear or could be improved, suggest a better
+approach. If a new library would significantly help, recommend it,
+explain why, and ask before adding it.
+Do not install new libraries without approval.
+
+---
+
+## Architecture
+
+Use this folder structure:
+
+```
+app/
+
+ (auth)/
+
+ (marketing)/
+ 
+ (protected)/
+
+ api/
+
+supabase/
+
+components/
+
+constants/
+
+data/
+
+hooks/
+
+lib/
+
+store/
+
+types/
+
+assets/
+```
+
+**app/** is for routes and screens only. Screens compose components and
+call hooks or stores. They should not contain large reusable UI blocks
+or business logic.
+
+**components/** is for reusable UI. Create a component when it is
+reused in multiple places, when it makes a screen easier to read, or
+when it represents a clear UI concept. Do not create components too early.
+
+**data/** holds hardcoded content. Keep it typed.
+
+**store/** holds Zustand stores. Persist with AsyncStorage when needed.
+
+**lib/** holds external service helpers (clerk.ts, api.ts, cn.ts).
+Never expose secret keys here.
+
+---
+
+## UI Rules
+
+For any UI task:
+- Replicate the provided design exactly.
+
+- Match layout, spacing, padding, font sizes, font hierarchy, colors,
+border radius, shadows, alignment, and proportions.
+
+- Do not approximate. Do not simplify unless explicitly asked.
+
+---
+
+## Styling Rules
+
+Use tailwind classes. Do not use css unless it is not possible to style with className.
+Use the tailwind version installed in this project. Check
+package.json. Do not upgrade without approval.
+Reuse class patterns through utilities in global.css.
+
+---
+
+## Image Rule
+
+Use centralized image imports.
+1. Check if constants/images.ts exists.
+
+2. If not, create it.
+
+3. Import all app images there.
+
+4. Use them through the centralized object.
+
+```ts
+import mascot from "@/assets/images/mascot.png";
+export const images = {
+
+ mascot,
+
+};
+```
+
+```tsx
+<Image source={images.mascot} />
+```
+
+Do not import image assets directly inside screens or components.
+
+---
+
+## State Management
+
+- Zustand for global client state.
+
+---
+
+## TypeScript
+
+- Strict mode.
+
+- No `any`.
+
+- Keep types simple and readable.
+
+---
+
+## Feature Implementation
+
+When building a feature:
+1. Read this file first.
+
+2. Identify the files to change.
+
+3. Keep changes focused.
+
+4. Do not rewrite unrelated code.
+
+5. Follow existing patterns.
+
+6. Make sure the feature works end to end.
+
+7. Fix lint and type errors before finishing.
+
+---
+
+## Secrets
+
+- Never expose secret keys in client code.
+
+- Use server routes for tokens, AI calls, and any external API access.
+
+---
+
+## Authentication
+
+Use Clerk. Do not build custom auth.
+
+---
+
+## Communication
+
+Be concise. Explain what changed and how to test it.
+
+---
+
+## Final Reminder
+
+Before every feature:
+- Read this file.
+
+- Follow it strictly.
+
+- Build clean, simple code.
+
+- Replicate UI exactly when designs are provided.

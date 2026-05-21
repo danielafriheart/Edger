@@ -1,9 +1,9 @@
-import Waitlist from '@/features/waitlist/Waitlist';
+import { WaitlistScreen } from './WaitlistScreen';
 
 export const metadata = {
   title: 'Waitlist · Edger',
 };
 
 export default function WaitlistPage() {
-  return <Waitlist />;
+  return <WaitlistScreen />;
 }
