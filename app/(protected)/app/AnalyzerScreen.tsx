@@ -2,7 +2,7 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { AnalyzerPillNav } from '@/components/risk-analyzer/AnalyzerNav';
+import { AppPillNav } from '@/components/ui/AppPillNav';
 import { ConfigureView } from '@/components/risk-analyzer/ConfigureView';
 import { ResultView } from '@/components/risk-analyzer/ResultView';
 import { useRiskAnalyzerState } from '@/hooks/useRiskAnalyzerState';
@@ -35,7 +35,11 @@ export function AnalyzerScreen() {
       <div className="landing-grain absolute inset-0 pointer-events-none opacity-50 z-0" />
       <div className="landing-aurora absolute inset-0 pointer-events-none z-0 opacity-30" />
 
-      <AnalyzerPillNav onLogout={() => void handleLogout()} />
+      <AppPillNav
+        currentPage="analyzer"
+        position="absolute"
+        onLogout={() => void handleLogout()}
+      />
 
       <main className="flex-1 relative z-10 pt-24 md:pt-28 pb-6 px-4 min-h-0 flex flex-col items-center justify-center">
         <div className="max-w-5xl mx-auto w-full flex flex-col">
@@ -78,6 +82,7 @@ export function AnalyzerScreen() {
               image={state.image}
               aiFeedback={state.aiFeedback}
               persistWarning={state.persistWarning}
+              journalDraftSaved={state.journalDraftSaved}
               onReset={state.resetAll}
               onCopy={state.copySummary}
             />

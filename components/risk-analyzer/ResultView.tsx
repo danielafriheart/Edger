@@ -18,6 +18,7 @@ export function ResultView({
   image,
   aiFeedback,
   persistWarning,
+  journalDraftSaved,
   onReset,
   onCopy,
 }: {
@@ -25,6 +26,7 @@ export function ResultView({
   image: string | null;
   aiFeedback?: AiChartFeedbackPayload | null;
   persistWarning?: string | null;
+  journalDraftSaved?: boolean;
   onReset: () => void;
   onCopy: () => void;
 }) {
@@ -41,6 +43,16 @@ export function ResultView({
         <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] text-amber-950">
           {persistWarning}
         </div>
+      ) : null}
+      {journalDraftSaved ? (
+        <a
+          href="/journal"
+          className="inline-flex items-center gap-2 self-start rounded-full bg-emerald-50 border border-emerald-200/70 px-3 py-1 text-[12px] text-emerald-800 font-medium hover:bg-emerald-100 transition-colors"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 edger-dot-pulse" />
+          Saved to journal — open to log outcome
+          <span aria-hidden>→</span>
+        </a>
       ) : null}
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-3 h-[60vh] max-h-[60vh] min-h-0">
         <ResultHero result={result} lot={lot} kindLabel={kindLabel} />

@@ -5,6 +5,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useChartLevelExtraction } from '@/hooks/useChartLevelExtraction';
 import { useChartPaste } from '@/hooks/useChartPaste';
 import type { AnalyzeRiskResponseBody } from '@/types/analyze-risk-api';
+import { createJournalEntry } from '@/lib/journal/journalSdk';
+import { todayIso } from '@/lib/journal/calendarMath';
 import {
   chartImageCompressErrorMessage,
   validateChartImageFile,
@@ -52,6 +54,10 @@ export function useRiskAnalyzerState() {
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
+  // Tracks whether the most recent successful calculation was also saved to
+  // the journal as a draft entry. The result UI shows a small confirmation
+  // chip when this is true.
+  const [journalDraftSaved, setJournalDraftSaved] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
@@ -167,6 +173,29 @@ export function useRiskAnalyzerState() {
       setResult(data.result);
       setAiFeedback(data.aiFeedback ?? null);
       setPersistWarning(data.persistWarning ?? null);
+      setJournalDraftSaved(false);
+
+      // Fire-and-forget: auto-save a draft journal entry tied to this
+      // calculation. The user can later open it from the calendar and fill
+      // in the actual outcome. Failures are silent — manual add still works.
+      if (data.result.ok) {
+        void createJournalEntry({
+          tradeDate: todayIso(),
+          instrumentSymbol: pair,
+          pairCategory: category,
+          direction,
+          outcome: 'pending',
+          pnlUsd: null,
+          notes: null,
+          source: 'analyzer',
+          historyId: data.historyId,
+        })
+          .then(() => setJournalDraftSaved(true))
+          .catch(() => {
+            /* journal save failed silently — calculation already succeeded */
+          });
+      }
+
       if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch {
       setAnalyzeError('Network error — try again.');
@@ -184,6 +213,7 @@ export function useRiskAnalyzerState() {
     setPersistWarning(null);
     setAnalyzeError(null);
     setImageError(null);
+    setJournalDraftSaved(false);
     clearExtractStatus();
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -246,6 +276,7 @@ export function useRiskAnalyzerState() {
     result,
     aiFeedback,
     persistWarning,
+    journalDraftSaved,
     analyzing,
     analyzeError,
     instrument,

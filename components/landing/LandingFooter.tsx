@@ -3,6 +3,7 @@ import { EdgerLogo } from '@/components/ui/Logo';
 const PRODUCT_LINKS = [
   { label: 'How it works', href: '#how' },
   { label: 'Instruments', href: '#instruments' },
+  { label: 'Journal', href: '/journal' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Try Edger', href: '/app' },
 ];
