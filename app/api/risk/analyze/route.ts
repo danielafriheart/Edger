@@ -3,14 +3,13 @@ import { NextResponse } from "next/server";
 
 import { calculateTrade } from "@/lib/calc";
 import { buildCalculationHistoryRow } from "@/lib/risk/buildCalculationHistoryRow";
-import { fetchGeminiChartFeedback } from "@/lib/risk/geminiChartFeedback";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { validateAnalyzeRiskBody } from "@/lib/risk/validateAnalyzeRiskBody";
 import { findInstrument } from "@/constants/trading";
 
 /**
- * Clerk-authenticated sizing + optional Gemini chart notes + calculation_history insert.
- * Entitlements: all signed-in users may persist rows until Polar/plan sync ships (same as MVP plan).
+ * Clerk-authenticated lot sizing from form inputs + calculation_history insert.
+ * Chart images are processed separately via /api/risk/extract-chart on paste.
  */
 export async function POST(req: Request) {
   const { userId } = await auth();
@@ -45,28 +44,11 @@ export async function POST(req: Request) {
     riskUSD: body.riskUSD,
   });
 
-  const setupLines = [
-    `Instrument: ${body.instrumentSymbol} (${body.pairCategory})`,
-    `Direction: ${body.direction}`,
-    `Entry: ${body.entry}`,
-    `Stop loss: ${body.stopLoss}`,
-    `Take profit: ${body.takeProfit}`,
-    `Risk USD: ${body.riskUSD}`,
-  ];
-  const aiFeedback =
-    body.image != null
-      ? await fetchGeminiChartFeedback({
-          imageBase64: body.image.base64,
-          mimeType: body.image.mimeType,
-          userSetupSummary: setupLines.join("\n"),
-        })
-      : null;
-
   let historyId: string | null = null;
   let persistWarning: string | undefined;
 
   const supabase = await getSupabaseServerClient();
-  const row = buildCalculationHistoryRow(userId, body.pairCategory, result, aiFeedback);
+  const row = buildCalculationHistoryRow(userId, body.pairCategory, result, null);
 
   const { data: inserted, error } = await supabase.from("calculation_history").insert(row).select("id").maybeSingle();
 
@@ -79,7 +61,7 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     result,
-    aiFeedback,
+    aiFeedback: null,
     historyId,
     ...(persistWarning ? { persistWarning } : {}),
   });

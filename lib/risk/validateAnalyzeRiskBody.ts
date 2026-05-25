@@ -1,9 +1,4 @@
-import { Buffer } from 'node:buffer';
-
-import { formatChartImageLimitKb, MAX_CHART_IMAGE_BYTES } from '@/constants/chart-image';
 import { INSTRUMENTS, type PairCategory } from '@/constants/trading';
-
-const ALLOWED_IMAGE_MIME = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif']);
 
 export interface ValidatedAnalyzeBody {
   pairCategory: PairCategory;
@@ -13,14 +8,13 @@ export interface ValidatedAnalyzeBody {
   stopLoss: number;
   takeProfit: number;
   riskUSD: number;
-  image?: { mimeType: string; base64: string };
 }
 
 function isPairCategory(s: unknown): s is PairCategory {
   return typeof s === 'string' && s in INSTRUMENTS;
 }
 
-/** POST body from the analyzer; image is optional multimodal context. */
+/** POST body from the analyzer (numeric trade inputs only). */
 export function validateAnalyzeRiskBody(body: unknown):
   | { ok: true; data: ValidatedAnalyzeBody }
   | { ok: false; status: number; message: string } {
@@ -59,38 +53,6 @@ export function validateAnalyzeRiskBody(body: unknown):
     }
   }
 
-  let image: { mimeType: string; base64: string } | undefined;
-  if (b.image != null && b.image !== '') {
-    if (typeof b.image !== 'object') {
-      return { ok: false, status: 400, message: 'Invalid image' };
-    }
-    const img = b.image as Record<string, unknown>;
-    const mimeType = img.mimeType;
-    const raw64 = img.base64;
-    if (typeof mimeType !== 'string' || typeof raw64 !== 'string') {
-      return { ok: false, status: 400, message: 'Image requires mimeType and base64' };
-    }
-    if (!ALLOWED_IMAGE_MIME.has(mimeType.trim().toLowerCase())) {
-      return { ok: false, status: 400, message: 'Unsupported image type' };
-    }
-    let base64 = raw64.includes('base64,') ? raw64.split('base64,')[1]! : raw64;
-    base64 = base64.replace(/\s/g, '');
-    try {
-      const bytes = Buffer.from(base64, 'base64').length;
-      if (bytes > MAX_CHART_IMAGE_BYTES) {
-        return {
-          ok: false,
-          status: 413,
-          message: `Image too large (max ${formatChartImageLimitKb()})`,
-        };
-      }
-      if (bytes === 0) return { ok: false, status: 400, message: 'Empty image' };
-    } catch {
-      return { ok: false, status: 400, message: 'Invalid base64 image' };
-    }
-    image = { mimeType: mimeType.trim().toLowerCase(), base64 };
-  }
-
   const data: ValidatedAnalyzeBody = {
     pairCategory,
     instrumentSymbol: instrumentSymbol.trim(),
@@ -99,7 +61,6 @@ export function validateAnalyzeRiskBody(body: unknown):
     stopLoss,
     takeProfit,
     riskUSD,
-    ...(image ? { image } : {}),
   };
 
   const symbols = INSTRUMENTS[data.pairCategory].map((i) => i.symbol);

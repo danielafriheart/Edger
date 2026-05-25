@@ -1,6 +1,12 @@
 import type { Direction } from '@/lib/calc';
+import { refineExtractedChartLevels } from '@/lib/risk/refineExtractedChartLevels';
 import { resolvePairCategory } from '@/lib/risk/resolveChartInstrument';
-import type { ChartExtractConfidence, ExtractedChartLevels } from '@/types/chart-extract';
+import type {
+  AxisPriceInferredRole,
+  AxisPriceLabel,
+  ChartExtractConfidence,
+  ExtractedChartLevels,
+} from '@/types/chart-extract';
 
 function extractJsonCandidate(text: string): string {
   const trimmed = text.trim();
@@ -39,6 +45,45 @@ function parseNotes(v: unknown): string[] {
   return v.filter((x): x is string => typeof x === 'string' && x.trim().length > 0);
 }
 
+const AXIS_ROLES: AxisPriceInferredRole[] = [
+  'entry',
+  'stop_loss',
+  'take_profit',
+  'structure',
+  'current_price',
+  'unknown',
+];
+
+function parseAxisRole(v: unknown): AxisPriceInferredRole | null {
+  if (typeof v !== 'string') return null;
+  const normalized = v.trim().toLowerCase().replace(/\s+/g, '_');
+  return AXIS_ROLES.includes(normalized as AxisPriceInferredRole)
+    ? (normalized as AxisPriceInferredRole)
+    : null;
+}
+
+function parseAxisPriceLabels(v: unknown): AxisPriceLabel[] | undefined {
+  if (!Array.isArray(v)) return undefined;
+  const labels: AxisPriceLabel[] = [];
+  for (const item of v) {
+    if (!item || typeof item !== 'object') continue;
+    const row = item as Record<string, unknown>;
+    const price = parseNullableNumber(row.price);
+    if (price == null) continue;
+    labels.push({
+      price,
+      boxColor:
+        typeof row.boxColor === 'string' && row.boxColor.trim() ? row.boxColor.trim() : null,
+      chartLabel:
+        typeof row.chartLabel === 'string' && row.chartLabel.trim()
+          ? row.chartLabel.trim()
+          : null,
+      inferredRole: parseAxisRole(row.inferredRole),
+    });
+  }
+  return labels.length > 0 ? labels : undefined;
+}
+
 /** Parse model JSON; returns null if shape is unusable. */
 export function parseExtractedChartLevelsJson(raw: string): ExtractedChartLevels | null {
   let parsed: unknown;
@@ -63,9 +108,10 @@ export function parseExtractedChartLevelsJson(raw: string): ExtractedChartLevels
   const hasInstrument = Boolean(instrumentSymbol);
   if (!hasPrices && !hasInstrument) return null;
 
-  return {
+  const draft: ExtractedChartLevels = {
     instrumentSymbol,
     pairCategory: parsePairCategory(o.pairCategory),
+    axisPriceLabels: parseAxisPriceLabels(o.axisPriceLabels),
     direction: parseDirection(o.direction),
     entry,
     stopLoss,
@@ -73,4 +119,6 @@ export function parseExtractedChartLevelsJson(raw: string): ExtractedChartLevels
     confidence: parseConfidence(o.confidence),
     notes: parseNotes(o.notes),
   };
+
+  return refineExtractedChartLevels(draft);
 }
