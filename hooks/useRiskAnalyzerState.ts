@@ -24,6 +24,8 @@ import {
   type CalcResult,
   type Direction,
 } from "@/lib/calc";
+import { todayIso } from "@/lib/journal/calendarMath";
+import { createJournalEntry } from "@/lib/journal/journalSdk";
 
 export function useRiskAnalyzerState() {
   const [image, setImage] = useState<string | null>(null);
@@ -40,6 +42,7 @@ export function useRiskAnalyzerState() {
   const [aiFeedback, setAiFeedback] =
     useState<AnalyzeRiskResponseBody["aiFeedback"]>(null);
   const [persistWarning, setPersistWarning] = useState<string | null>(null);
+  const [journalDraftSaved, setJournalDraftSaved] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -116,6 +119,7 @@ export function useRiskAnalyzerState() {
   const handleAnalyze = async () => {
     setAnalyzeError(null);
     setPersistWarning(null);
+    setJournalDraftSaved(false);
     setAnalyzing(true);
     try {
       const snapshot = calculateTrade({
@@ -155,6 +159,23 @@ export function useRiskAnalyzerState() {
       setResult(data.result);
       setAiFeedback(data.aiFeedback ?? null);
       setPersistWarning(data.persistWarning ?? null);
+
+      try {
+        await createJournalEntry({
+          tradeDate: todayIso(),
+          instrumentSymbol: pair,
+          pairCategory: category,
+          direction,
+          outcome: "pending",
+          source: "analyzer",
+          historyId: data.historyId ?? null,
+          notes: data.aiFeedback?.chartSummary ?? null,
+        });
+        setJournalDraftSaved(true);
+      } catch {
+        // Sizing succeeded — don't block the result UI if journal save fails.
+      }
+
       if (typeof window !== "undefined")
         window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
@@ -171,6 +192,7 @@ export function useRiskAnalyzerState() {
     setResult(null);
     setAiFeedback(null);
     setPersistWarning(null);
+    setJournalDraftSaved(false);
     setAnalyzeError(null);
     setImageError(null);
     clearExtractStatus();
@@ -236,6 +258,7 @@ export function useRiskAnalyzerState() {
     result,
     aiFeedback,
     persistWarning,
+    journalDraftSaved,
     analyzing,
     analyzeError,
     instrument,

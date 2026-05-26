@@ -104,7 +104,7 @@ function SuccessContent({
   onClose,
   onCopy,
 }: {
-  result: CalcResult & { ok: true };
+  result: CalcResult;
   image: string | null;
   aiFeedback?: AiChartFeedbackPayload | null;
   persistWarning?: string | null;
