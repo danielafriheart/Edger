@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AccountSection } from "@/components/profile/AccountSection";
 import { BillingSection } from "@/components/profile/BillingSection";
-import { ProfileFooter, ProfilePillNav } from "@/components/profile/ProfileNav";
+import { AppPillNav } from "@/components/ui/AppPillNav";
+import { ProfileFooter } from "@/components/profile/ProfileNav";
 import { UsageSection } from "@/components/profile/UsageSection";
 import { splitFullNameForClerk } from "@/lib/auth/fullNameDerived";
 import { loadEdgerBilling, type EdgerBillingSlice } from "@/lib/edger-billing-local";
@@ -99,7 +100,7 @@ export function ProfileScreen() {
       <div className="landing-grain fixed inset-0 pointer-events-none opacity-40 z-0" />
       <div className="landing-aurora absolute inset-x-0 top-0 h-[420px] pointer-events-none z-0 opacity-50" />
 
-      <ProfilePillNav onLogout={() => void handleLogout()} />
+      <AppPillNav currentPage="profile" onLogout={() => void handleLogout()} />
 
       <main className="relative z-10 pt-32 md:pt-36 pb-20 px-4 md:px-6">
         <div className="max-w-5xl mx-auto">
