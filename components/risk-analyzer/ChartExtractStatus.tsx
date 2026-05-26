@@ -15,7 +15,7 @@ export function ChartExtractStatus({
     <div className="flex flex-col gap-1.5" role="status" aria-live="polite">
       {extracting ? (
         <p className="text-[11px] text-emerald-700 font-medium">
-          Reading instrument, entry, SL, and TP…
+          Reading instrument and trade zone levels…
         </p>
       ) : null}
       {notice ? <p className="text-[11px] text-emerald-800 font-medium">{notice}</p> : null}

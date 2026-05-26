@@ -26,7 +26,7 @@ export function applyExtractedChartLevels(
   levels: ExtractedChartLevels,
   handlers: ApplyExtractedChartHandlers,
 ): ApplyExtractedChartResult {
-  const warnings = [...levels.notes];
+  const warnings: string[] = [];
   const appliedFields: string[] = [];
 
   const resolved = resolveInstrumentFromExtract(levels.instrumentSymbol, levels.pairCategory);
